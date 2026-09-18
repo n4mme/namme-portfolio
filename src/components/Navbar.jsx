@@ -65,19 +65,11 @@ const Navbar = ({ isDark, toggleTheme }) => {
         <a
           href="#home"
           onClick={(e) => scrollToSection(e, '#home')}
-          className="flex items-center gap-2.5 group cursor-pointer"
+          className="flex items-center group cursor-pointer"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform">
-            N
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-wider text-zinc-900 dark:text-white font-mono group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
-              NAMME
-            </span>
-            <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 dark:text-zinc-400 -mt-1">
-              Dev Portfolio
-            </span>
-          </div>
+          <span className="font-extrabold text-2xl tracking-wider text-zinc-900 dark:text-white font-mono group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+            NAMME
+          </span>
         </a>
 
         {/* Center: Desktop Navigation Links in EXACT specified order */}
