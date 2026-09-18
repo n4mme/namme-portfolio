@@ -82,7 +82,7 @@ const Hero = ({ onOpenCV }) => {
   return (
     <section
       id="home"
-      className="scroll-mt-20 relative min-h-[calc(100vh-72px)] flex items-center justify-center pt-8 pb-16 overflow-x-clip"
+      className="scroll-mt-24 relative min-h-[calc(100vh-72px)] flex items-center justify-center pt-8 pb-16 overflow-x-clip"
     >
       {/* Subtle background ambient mesh */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-emerald-500/10 via-teal-500/5 to-cyan-500/10 rounded-full blur-3xl pointer-events-none -z-10" />

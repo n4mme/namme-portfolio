@@ -35,7 +35,7 @@ const Skills = () => {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
+          viewport={{ once: false, amount: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {skillCategories.map((cat) => {
@@ -45,9 +45,9 @@ const Skills = () => {
               <motion.div
                 key={cat.title}
                 variants={fadeInUp}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -5 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:shadow-lg dark:hover:border-zinc-700 transition-all flex flex-col justify-between"
+                className="relative rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.15)] transition-all flex flex-col justify-between group overflow-hidden"
               >
                 <div>
                   {/* Category Header */}

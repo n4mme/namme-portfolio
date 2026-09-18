@@ -78,10 +78,10 @@ const Navbar = ({ isDark, toggleTheme }) => {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 backdrop-blur-md border-b ${
+      className={`sticky top-0 z-50 w-full transition-all duration-300 backdrop-blur-xl border-b ${
         isScrolled
-          ? 'bg-white/80 dark:bg-zinc-900/85 border-zinc-200/80 dark:border-zinc-800 shadow-sm'
-          : 'bg-white/60 dark:bg-zinc-900/70 border-zinc-200/50 dark:border-zinc-800/60'
+          ? 'bg-white/85 dark:bg-zinc-950/80 border-zinc-200/80 dark:border-emerald-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
+          : 'bg-white/70 dark:bg-zinc-950/70 border-zinc-200/60 dark:border-emerald-500/15'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
@@ -97,7 +97,7 @@ const Navbar = ({ isDark, toggleTheme }) => {
         </a>
 
         {/* Center: Desktop Navigation Links in EXACT specified order */}
-        <nav className="hidden md:flex items-center gap-1 bg-zinc-100/80 dark:bg-zinc-800/60 p-1.5 rounded-full border border-zinc-200/70 dark:border-zinc-700/60">
+        <nav className="hidden md:flex items-center gap-1 bg-zinc-100/80 dark:bg-zinc-900/80 p-1.5 rounded-full border border-zinc-200/80 dark:border-zinc-800 shadow-inner">
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.substring(1);
             return (
@@ -111,12 +111,12 @@ const Navbar = ({ isDark, toggleTheme }) => {
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
                 }`}
               >
-                {/* Active Nav Indicator with layoutId="activeNav" */}
+                {/* Active Nav Indicator with layoutId="activeNav" & bright emerald glow */}
                 {isActive && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute inset-0 bg-emerald-600 dark:bg-emerald-500 rounded-full shadow-sm"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] dark:shadow-[0_0_25px_rgba(16,185,129,0.7)]"
+                    transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                   />
                 )}
                 <span className="relative z-10">{link.name}</span>
@@ -127,15 +127,27 @@ const Navbar = ({ isDark, toggleTheme }) => {
 
         {/* Right Actions: Distinct "Hire Me" CTA + Theme Toggle */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Hire Me CTA Button */}
-          <a
+          {/* Hire Me CTA Button with continuous subtle neon breathing ring */}
+          <motion.a
             href="#contact"
             onClick={(e) => scrollToSection(e, '#contact')}
-            className="relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
+            animate={{
+              boxShadow: [
+                '0 0 0 0 rgba(16, 185, 129, 0)',
+                '0 0 16px 4px rgba(16, 185, 129, 0.45)',
+                '0 0 0 0 rgba(16, 185, 129, 0)',
+              ],
+            }}
+            transition={{
+              duration: 2.4,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-[length:200%_auto] hover:bg-right hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-md overflow-hidden group"
           >
-            <Sparkles size={14} className="animate-pulse" />
-            <span>Hire Me</span>
-          </a>
+            <Sparkles size={14} className="text-emerald-200 animate-pulse" />
+            <span className="relative z-10 tracking-wide">Hire Me</span>
+          </motion.a>
 
           {/* Theme Toggle Switch */}
           <button

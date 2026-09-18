@@ -70,7 +70,7 @@ const Contact = () => {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
+          viewport={{ once: false, amount: 0.2 }}
           className="grid grid-cols-1 lg:grid-cols-12 gap-10"
         >
           {/* Left Column: Direct Info & Social Cards */}

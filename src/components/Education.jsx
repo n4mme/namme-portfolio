@@ -34,7 +34,7 @@ const Education = () => {
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: false, amount: 0.2 }}
             className="space-y-12"
           >
             {educationData.map((edu, idx) => {
@@ -61,8 +61,10 @@ const Education = () => {
                     </div>
                   </div>
 
-                  {/* Main Milestone Card */}
-                  <div className="ml-10 sm:ml-12 w-full p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-lg dark:hover:shadow-emerald-950/20 transition-all duration-300">
+                  {/* Main Milestone Card with glowing shimmer sweep */}
+                  <div className="relative ml-10 sm:ml-12 w-full p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/60 dark:hover:border-emerald-500/60 hover:shadow-[0_0_30px_rgba(16,185,129,0.18)] transition-all duration-300 group overflow-hidden">
+                    {/* Diagonal glowing shimmer sweep on hover */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent pointer-events-none" />
                     
                     {/* Header: Period, Location & Status Badges */}
                     <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
