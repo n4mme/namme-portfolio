@@ -6,7 +6,7 @@ export const personalInfo = {
   degree: "Bachelor of Science in Information Technology (BSIT)",
   specialization: "Web & Mobile Application Development",
   location: "Bulacan, Philippines",
-  email: "emmanuelnantes.dev@gmail.com",
+  email: "emmannantz@gmail.com",
   github: "https://github.com/n4mme",
   linkedin: "https://linkedin.com/in/emmanuelnantes",
   availability: "Open to Professional Internship and Early-Career Opportunities",
