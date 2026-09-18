@@ -4,9 +4,8 @@ import { FolderGit2, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide
 import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { projectList } from '../data/portfolioData';
 
-const categories = ['All', 'Full Stack', 'Mobile', 'AI Tools'];
-
 const Projects = () => {
+  const categories = ['All', ...Array.from(new Set(projectList.map((p) => p.category)))];
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filteredProjects = activeCategory === 'All'
@@ -31,7 +30,7 @@ const Projects = () => {
               Engineered Applications
             </h2>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">
-              Explore web platforms, mobile software, and AI-accelerated solutions.
+              Explore game developments, web platforms, and mobile software.
             </p>
           </div>
 
@@ -60,7 +59,11 @@ const Projects = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className={`grid gap-8 ${
+            filteredProjects.length === 1
+              ? 'grid-cols-1 max-w-3xl mx-auto w-full'
+              : 'grid-cols-1 md:grid-cols-2'
+          }`}
         >
           <AnimatePresence>
             {filteredProjects.map((project) => (
@@ -70,6 +73,29 @@ const Projects = () => {
                 variants={fadeInUp}
                 className="flex flex-col justify-between rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl dark:hover:border-zinc-700 transition-all group overflow-hidden"
               >
+                {/* Project Image Preview */}
+                {project.image && (
+                  <div className="relative w-full h-72 sm:h-96 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-80" />
+                    <div className="absolute top-4 right-4 z-10">
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-zinc-900/80 hover:bg-emerald-600 backdrop-blur-md border border-white/10 hover:border-emerald-500/50 shadow-md transition-all cursor-pointer"
+                      >
+                        <span>Play Live</span>
+                        <ExternalLink size={13} />
+                      </a>
+                    </div>
+                  </div>
+                )}
+
                 {/* Top Card Section */}
                 <div className="p-6 sm:p-8">
                   {/* Category & Featured Badge */}
@@ -115,15 +141,21 @@ const Projects = () => {
 
                 {/* Card Footer Actions */}
                 <div className="px-6 py-4 sm:px-8 bg-zinc-50 dark:bg-zinc-950/40 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
-                  >
-                    <Github size={16} />
-                    <span>Source Code</span>
-                  </a>
+                  {project.githubUrl ? (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                    >
+                      <Github size={16} />
+                      <span>Source Code</span>
+                    </a>
+                  ) : (
+                    <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+                      Role: Assistant Programmer &amp; Level Designer
+                    </span>
+                  )}
 
                   <a
                     href={project.demoUrl}

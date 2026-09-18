@@ -24,47 +24,15 @@ export const typewriterPhrases = [
 export const projectList = [
   {
     id: 1,
-    title: "EduPulse - BSU Campus Learning Hub",
-    category: "Full Stack",
-    description: "A centralized academic collaboration and schedule management platform built specifically for IT students, featuring real-time announcements, resource sharing, and assignment tracking.",
-    tags: ["React", "Node.js", "Express", "Tailwind CSS", "PostgreSQL"],
-    demoUrl: "https://edupulse-demo.vercel.app",
-    githubUrl: "https://github.com/n4mme/edupulse-hub",
-    featured: true,
-    stats: "Over 400+ active student sessions simulated"
-  },
-  {
-    id: 2,
-    title: "ApexMobile - Fitness & Habit Tracker",
+    title: "Kingdom Break",
     category: "Mobile",
-    description: "Cross-platform mobile application with offline-first persistence, visual biometric progression charts, streak counters, and personalized AI workout recommendations.",
-    tags: ["React Native", "Expo", "TypeScript", "Tailwind (NativeWind)", "SQLite"],
-    demoUrl: "https://apexmobile-preview.vercel.app",
-    githubUrl: "https://github.com/n4mme/apex-mobile",
+    description: "An action-packed 2D platformer developed using Unity and C#, featuring responsive 2D physics, intricate level design, dynamic enemy encounters, and mobile touch optimization. Engineered as Assistant Programmer and Level Designer, implementing core player movement physics, trap mechanics, enemy collision systems, and multi-stage fantasy level architectures across the realm of Aetherfall.",
+    tags: ["C#", "Unity", "2D Physics", "2D Game", "Game Engine", "Game Development"],
+    demoUrl: "https://kingdom-break.vercel.app/",
+    githubUrl: null,
+    image: "/kingdom-break.jpg",
     featured: true,
-    stats: "Smooth 60fps animations & offline sync"
-  },
-  {
-    id: 3,
-    title: "NeuroDev - AI Prompt-to-Component Studio",
-    category: "AI Tools",
-    description: "Interactive developer utility powered by LLM tool-calling that generates accessible, responsive React components in real time with instantaneous live preview and JSX export.",
-    tags: ["React", "Vite", "OpenAI / Claude API", "Framer Motion", "Tailwind CSS"],
-    demoUrl: "https://neurodev-studio.vercel.app",
-    githubUrl: "https://github.com/n4mme/neurodev-studio",
-    featured: true,
-    stats: "3x faster UI prototyping workflow"
-  },
-  {
-    id: 4,
-    title: "QuickServe - Local Commerce POS & Inventory",
-    category: "Full Stack",
-    description: "Lightweight point-of-sale and live inventory tracking system built for local community businesses with receipt generation, barcode lookup, and daily revenue analytics.",
-    tags: ["React", "Firebase", "Tailwind CSS", "Zustand"],
-    demoUrl: "https://quickserve-pos.vercel.app",
-    githubUrl: "https://github.com/n4mme/quickserve-pos",
-    featured: false,
-    stats: "Instantaneous cache updates"
+    stats: "Assistant Programmer & Level Designer • Made with Unity"
   }
 ];
 
