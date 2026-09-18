@@ -23,7 +23,7 @@ const Projects = () => {
               <FolderGit2 size={14} />
               <span>Featured Works</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white font-mono">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white font-sans">
               Engineered Applications
             </h2>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">

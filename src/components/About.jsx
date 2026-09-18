@@ -37,7 +37,7 @@ const About = () => {
             <BookOpen size={14} />
             <span>About Me</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white font-mono">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white font-sans">
             Crafting Digital Solutions at the Intersection of Code &amp; AI
           </h2>
           <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
