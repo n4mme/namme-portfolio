@@ -2,30 +2,31 @@ import * as THREE from 'three';
 
 /**
  * Creates repeating fabric lanyard texture: "NAMME • NAMME • NAMME"
+ * Widened and optimized with bold typography and crisp stitching
  */
 export function createLanyardTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
-  canvas.height = 128;
+  canvas.height = 144;
   const ctx = canvas.getContext('2d');
 
   // Deep dark emerald fabric weave background
   ctx.fillStyle = '#064e3b';
-  ctx.fillRect(0, 0, 1024, 128);
+  ctx.fillRect(0, 0, 1024, 144);
 
-  // Subtle fabric edge stitch lines
+  // Bold fabric edge stitch lines
   ctx.strokeStyle = '#047857';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(4, 4, 1016, 120);
+  ctx.lineWidth = 5;
+  ctx.strokeRect(4, 4, 1016, 136);
 
   // Repeating woven branded text
   ctx.fillStyle = '#ecfdf5';
-  ctx.font = 'bold 36px "Fira Code", monospace';
+  ctx.font = 'bold 42px "Fira Code", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
   const text = 'NAMME   •   NAMME   •   NAMME   •   NAMME   •   ';
-  ctx.fillText(text, 512, 64);
+  ctx.fillText(text, 512, 72);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;

@@ -87,17 +87,18 @@ const Hero = ({ onOpenCV }) => {
       {/* Subtle background ambient mesh */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-emerald-500/10 via-teal-500/5 to-cyan-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      {/* 3D Interactive Hanging ID Card & Lanyard (Full-Hero Viewport Canvas) */}
+      <LanyardBadge />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         {/* Two-Column Responsive Desktop Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[560px]">
           
-          {/* Left Column: 3D Interactive Hanging ID Card & Lanyard */}
-          <div className="lg:col-span-5 flex justify-center order-2 lg:order-1 relative z-20 overflow-visible">
-            <LanyardBadge />
-          </div>
+          {/* Left Column Spacer: Reserves exact physical layout space for the badge */}
+          <div className="lg:col-span-5 h-[440px] lg:h-full pointer-events-none order-2 lg:order-1" />
 
           {/* Right Column: Typography & Actions */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2 relative z-10">
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2">
             
             {/* Top Subtitle / Student Identity Pill */}
             <motion.div
