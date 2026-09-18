@@ -92,12 +92,12 @@ const Hero = ({ onOpenCV }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Column: 3D Interactive Hanging ID Card & Lanyard */}
-          <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
+          <div className="lg:col-span-5 flex justify-center order-2 lg:order-1 relative z-20 overflow-visible">
             <LanyardBadge />
           </div>
 
           {/* Right Column: Typography & Actions */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2">
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2 relative z-10">
             
             {/* Top Subtitle / Student Identity Pill */}
             <motion.div

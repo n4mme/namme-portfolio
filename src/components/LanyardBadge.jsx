@@ -1,10 +1,13 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Physics, RigidBody, useSphericalJoint, BallCollider, CuboidCollider } from '@react-three/rapier';
 import { createLanyardTexture, createFrontCardTexture, createBackCardTexture } from './cardTextures';
 
-// Helper function to dynamically generate and update the Catmull-Rom ribbon band mesh
+/**
+ * Robust ribbon mesh generator along Catmull-Rom spline
+ * Uses stable 2D screen-plane normal interpolation to prevent any ribbon twisting or glitching.
+ */
 function updateRibbonMesh(geometry, curve, numSegments = 40, ribbonWidth = 0.16) {
   const points = curve.getPoints(numSegments);
   const tangents = [];
@@ -15,35 +18,38 @@ function updateRibbonMesh(geometry, curve, numSegments = 40, ribbonWidth = 0.16)
   const positions = new Float32Array((numSegments + 1) * 2 * 3);
   const uvs = new Float32Array((numSegments + 1) * 2 * 2);
   const normals = new Float32Array((numSegments + 1) * 2 * 3);
-  const up = new THREE.Vector3(0, 0, 1);
 
   for (let i = 0; i <= numSegments; i++) {
     const p = points[i];
     const t = tangents[i];
-    const binormal = new THREE.Vector3().crossVectors(t, up).normalize();
-    if (binormal.lengthSq() < 0.0001) {
-      binormal.set(1, 0, 0);
-    }
-    const offset = binormal.multiplyScalar(ribbonWidth / 2);
+
+    // Compute continuous, stable binormal in XY screen plane (orthogonal to tangent)
+    const bx = -t.y;
+    const by = t.x;
+    const bLen = Math.hypot(bx, by);
+    const nx = bLen > 0.0001 ? bx / bLen : 1;
+    const ny = bLen > 0.0001 ? by / bLen : 0;
+
+    const halfW = ribbonWidth / 2;
 
     // Left vertex
-    positions[i * 6 + 0] = p.x - offset.x;
-    positions[i * 6 + 1] = p.y - offset.y;
-    positions[i * 6 + 2] = p.z - offset.z;
+    positions[i * 6 + 0] = p.x - nx * halfW;
+    positions[i * 6 + 1] = p.y - ny * halfW;
+    positions[i * 6 + 2] = p.z;
 
     // Right vertex
-    positions[i * 6 + 3] = p.x + offset.x;
-    positions[i * 6 + 4] = p.y + offset.y;
-    positions[i * 6 + 5] = p.z + offset.z;
+    positions[i * 6 + 3] = p.x + nx * halfW;
+    positions[i * 6 + 4] = p.y + ny * halfW;
+    positions[i * 6 + 5] = p.z;
 
-    // UVs
+    // UV coordinates
     const u = i / numSegments;
     uvs[i * 4 + 0] = u;
     uvs[i * 4 + 1] = 0;
     uvs[i * 4 + 2] = u;
     uvs[i * 4 + 3] = 1;
 
-    // Normal
+    // Normals pointing toward viewer (+Z)
     normals[i * 6 + 0] = 0;
     normals[i * 6 + 1] = 0;
     normals[i * 6 + 2] = 1;
@@ -63,9 +69,10 @@ function updateRibbonMesh(geometry, curve, numSegments = 40, ribbonWidth = 0.16)
       const b = i * 2 + 1;
       const c = (i + 1) * 2;
       const d = (i + 1) * 2 + 1;
-      // Double sided faces
+      // Front face
       indices.push(a, b, c);
       indices.push(b, d, c);
+      // Back face
       indices.push(c, b, a);
       indices.push(c, d, b);
     }
@@ -73,13 +80,12 @@ function updateRibbonMesh(geometry, curve, numSegments = 40, ribbonWidth = 0.16)
   }
 
   geometry.attributes.position.needsUpdate = true;
-  geometry.computeVertexNormals();
 }
 
 /**
- * 3D Physics Lanyard Rig Component (Runs inside <Physics>)
+ * 3D Physics Lanyard Rig with locked Y-axis rotation and smooth drag physics
  */
-function LanyardPhysicsRig({ textures, onPointerOver, onPointerOut }) {
+function LanyardPhysicsRig({ textures, onDragChange, onHoverChange }) {
   const fixed = useRef();
   const j1 = useRef();
   const j2 = useRef();
@@ -94,52 +100,51 @@ function LanyardPhysicsRig({ textures, onPointerOver, onPointerOut }) {
   const planeIntersect = useMemo(() => new THREE.Vector3(), []);
   const targetPos = useMemo(() => new THREE.Vector3(), []);
 
-  // Catmull-Rom curve connecting fixed anchor -> joints -> card top clip
-  const curve = useMemo(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, 4.2, 0),
-        new THREE.Vector3(0.3, 3.2, 0),
-        new THREE.Vector3(0.3, 2.2, 0),
-        new THREE.Vector3(0.3, 1.2, 0),
-        new THREE.Vector3(0.3, 0.8, 0),
-      ]),
-    []
-  );
+  // Centripetal Catmull-Rom curve from top anchor down to card clip
+  const curve = useMemo(() => {
+    const c = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 5.5, 0),   // Top anchor extended behind top navigation
+      new THREE.Vector3(0.2, 4.0, 0),
+      new THREE.Vector3(0.2, 2.6, 0),
+      new THREE.Vector3(0.2, 1.2, 0),
+      new THREE.Vector3(0.2, 0.6, 0),
+    ]);
+    c.curveType = 'centripetal';
+    return c;
+  }, []);
 
   const ribbonGeometry = useMemo(() => new THREE.BufferGeometry(), []);
 
   // Connect physics joints using Spherical Joint chains
   useSphericalJoint(fixed, j1, [
     [0, 0, 0],
-    [0, 0.9, 0],
+    [0, 1.1, 0],
   ]);
   useSphericalJoint(j1, j2, [
     [0, 0, 0],
-    [0, 0.9, 0],
+    [0, 1.1, 0],
   ]);
   useSphericalJoint(j2, j3, [
     [0, 0, 0],
-    [0, 0.9, 0],
+    [0, 1.1, 0],
   ]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, 1.48, 0],
+    [0, 1.46, 0],
   ]);
 
-  // Handle pointer down on card
+  // Pointer Down on Card
   const handlePointerDown = (e) => {
     e.stopPropagation();
     setIsDragging(true);
+    onDragChange?.(true);
 
     if (card.current) {
-      // Calculate intersection on z=0 plane
       raycaster.setFromCamera(e.pointer, e.camera);
       raycaster.ray.intersectPlane(dragPlane, planeIntersect);
       const cardPos = card.current.translation();
       dragOffset.current.set(cardPos.x, cardPos.y, cardPos.z).sub(planeIntersect);
 
-      // Wake up physics simulation
       card.current.wakeUp();
       j1.current?.wakeUp();
       j2.current?.wakeUp();
@@ -147,63 +152,71 @@ function LanyardPhysicsRig({ textures, onPointerOver, onPointerOut }) {
     }
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = useCallback(() => {
     if (isDragging) {
       setIsDragging(false);
+      onDragChange?.(false);
       card.current?.wakeUp();
     }
-  };
+  }, [isDragging, onDragChange]);
 
-  // Global pointer up listener
   useEffect(() => {
-    const onUp = () => {
-      if (isDragging) {
-        setIsDragging(false);
-        card.current?.wakeUp();
-      }
-    };
+    const onUp = () => handlePointerUp();
     window.addEventListener('pointerup', onUp);
     return () => window.removeEventListener('pointerup', onUp);
-  }, [isDragging]);
+  }, [handlePointerUp]);
 
-  // Frame loop: updates curve ribbon and dragging physics
+  // Animation & Physics Frame Loop
   useFrame((state) => {
     if (!fixed.current || !j1.current || !j2.current || !j3.current || !card.current) return;
 
-    // Handle interactive drag in 3D
+    // 1. Interactive 3D Dragging
     if (isDragging) {
       raycaster.setFromCamera(state.pointer, state.camera);
       raycaster.ray.intersectPlane(dragPlane, planeIntersect);
       targetPos.copy(planeIntersect).add(dragOffset.current);
 
-      // Bound drag limits for realism
-      targetPos.x = THREE.MathUtils.clamp(targetPos.x, -3.5, 3.5);
-      targetPos.y = THREE.MathUtils.clamp(targetPos.y, -3.0, 3.0);
+      // Bound drag limits within hero display area
+      targetPos.x = THREE.MathUtils.clamp(targetPos.x, -3.2, 5.0);
+      targetPos.y = THREE.MathUtils.clamp(targetPos.y, -3.2, 3.2);
 
       card.current.setNextKinematicTranslation(targetPos);
       card.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
     } else {
-      // Gentle micro-tilt hover response when not dragging
-      if (card.current) {
-        card.current.applyTorqueImpulse(
-          {
-            x: state.pointer.y * 0.0003,
-            y: state.pointer.x * 0.0003,
-            z: 0,
-          },
-          true
-        );
-      }
+      // Gentle subtle hover micro-tilt (X and Z only, never Y)
+      card.current.applyTorqueImpulse(
+        {
+          x: state.pointer.y * 0.0003,
+          y: 0, // Zero Y torque
+          z: -state.pointer.x * 0.0002,
+        },
+        true
+      );
     }
 
-    // Update CatmullRom curve points from physics rigid bodies
+    // 2. ENFORCE FRONT-FACING ORIENTATION (Strictly lock Y-axis rotation)
+    const rot = card.current.rotation();
+    if (Math.abs(rot.y) > 0.002) {
+      // Extract Euler, zero out Y, and reapply quaternion
+      const euler = new THREE.Euler().setFromQuaternion(
+        new THREE.Quaternion(rot.x, rot.y, rot.z, rot.w),
+        'YXZ'
+      );
+      euler.y = 0;
+      const q = new THREE.Quaternion().setFromEuler(euler);
+      card.current.setRotation({ x: q.x, y: 0, z: q.z, w: q.w }, true);
+      // Zero out any angular velocity on Y
+      const avel = card.current.angvel();
+      card.current.setAngvel({ x: avel.x, y: 0, z: avel.z }, true);
+    }
+
+    // 3. Update Catmull-Rom Ribbon Curve Points
     const pFixed = fixed.current.translation();
     const pJ1 = j1.current.translation();
     const pJ2 = j2.current.translation();
     const pJ3 = j3.current.translation();
     const pCard = card.current.translation();
 
-    // Clip position at top slot of card
     const cardRot = card.current.rotation();
     const q = new THREE.Quaternion(cardRot.x, cardRot.y, cardRot.z, cardRot.w);
     const clipOffset = new THREE.Vector3(0, 1.4, 0).applyQuaternion(q);
@@ -215,39 +228,35 @@ function LanyardPhysicsRig({ textures, onPointerOver, onPointerOut }) {
     curve.points[3].set(pJ3.x, pJ3.y, pJ3.z);
     curve.points[4].copy(pClip);
 
-    // Re-generate dynamic ribbon mesh along curve
+    // Update ribbon mesh geometry without stuttering
     if (ribbonGeometry) {
-      updateRibbonMesh(ribbonGeometry, curve, 36, 0.15);
+      updateRibbonMesh(ribbonGeometry, curve, 36, 0.16);
     }
   });
 
-  // Materials for 6 sides of card box geometry
+  // Card materials: Neutral lighting to prevent any color shifting
   const cardMaterials = useMemo(() => {
     const edgeMaterial = new THREE.MeshStandardMaterial({
-      color: '#27272a',
-      roughness: 0.3,
-      metalness: 0.4,
+      color: '#10b981', // Matching website emerald accent border
+      roughness: 0.35,
+      metalness: 0.2,
     });
 
-    const frontMaterial = new THREE.MeshPhysicalMaterial({
+    const frontMaterial = new THREE.MeshStandardMaterial({
       map: textures.front,
-      roughness: 0.25,
+      color: 0xffffff, // Pure white base to keep photo colors true
+      roughness: 0.35,
       metalness: 0.05,
-      clearcoat: 0.8,
-      clearcoatRoughness: 0.15,
-      reflectivity: 0.5,
     });
 
-    const backMaterial = new THREE.MeshPhysicalMaterial({
+    const backMaterial = new THREE.MeshStandardMaterial({
       map: textures.back,
-      roughness: 0.25,
+      color: 0xffffff,
+      roughness: 0.35,
       metalness: 0.05,
-      clearcoat: 0.8,
-      clearcoatRoughness: 0.15,
-      reflectivity: 0.5,
     });
 
-    // Box order: [+X, -X, +Y, -Y, +Z (Front), -Z (Back)]
+    // Order: [+X, -X, +Y, -Y, +Z (Front), -Z (Back)]
     return [edgeMaterial, edgeMaterial, edgeMaterial, edgeMaterial, frontMaterial, backMaterial];
   }, [textures]);
 
@@ -257,86 +266,84 @@ function LanyardPhysicsRig({ textures, onPointerOver, onPointerOut }) {
       <mesh ref={ribbonMesh} geometry={ribbonGeometry}>
         <meshStandardMaterial
           map={textures.band}
-          roughness={0.65}
-          metalness={0.1}
+          roughness={0.7}
+          metalness={0.05}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* 2. Top Anchor RigidBody (Fixed outside/at top of view) */}
-      <RigidBody ref={fixed} type="fixed" position={[0, 4.2, 0]} />
+      {/* 2. Fixed Anchor at absolute top */}
+      <RigidBody ref={fixed} type="fixed" position={[0, 5.5, 0]} />
 
-      {/* 3. Joint Chains (Dynamic small physics links) */}
+      {/* 3. Small joint chain links */}
       <RigidBody
         ref={j1}
-        position={[0.3, 3.2, 0]}
+        position={[0.2, 4.0, 0]}
         colliders={false}
         linearDamping={2.5}
-        angularDamping={2.5}
+        angularDamping={3.0}
+        enabledRotations={[true, false, true]}
       >
         <BallCollider args={[0.08]} />
       </RigidBody>
 
       <RigidBody
         ref={j2}
-        position={[0.3, 2.2, 0]}
+        position={[0.2, 2.6, 0]}
         colliders={false}
         linearDamping={2.5}
-        angularDamping={2.5}
+        angularDamping={3.0}
+        enabledRotations={[true, false, true]}
       >
         <BallCollider args={[0.08]} />
       </RigidBody>
 
       <RigidBody
         ref={j3}
-        position={[0.3, 1.2, 0]}
+        position={[0.2, 1.2, 0]}
         colliders={false}
         linearDamping={2.5}
-        angularDamping={2.5}
+        angularDamping={3.0}
+        enabledRotations={[true, false, true]}
       >
         <BallCollider args={[0.08]} />
       </RigidBody>
 
-      {/* 4. The Interactive ID Card Badge */}
+      {/* 4. The Interactive ID Card Badge (Locked Y Rotation) */}
       <RigidBody
         ref={card}
-        position={[0.3, -0.6, 0]}
+        position={[0.2, -0.6, 0]}
         type={isDragging ? 'kinematicPosition' : 'dynamic'}
         colliders={false}
         linearDamping={2.0}
-        angularDamping={2.0}
-        mass={1.5}
+        angularDamping={3.5}
+        mass={1.8}
+        enabledRotations={[true, false, true]} // Locked Y-axis: NEVER spins or flips over
       >
         <CuboidCollider args={[0.8, 1.2, 0.04]} />
 
-        {/* Grab trigger & 3D Card Group */}
+        {/* Card Group */}
         <group
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
-          onPointerOver={onPointerOver}
-          onPointerOut={onPointerOut}
+          onPointerOver={() => onHoverChange?.(true)}
+          onPointerOut={() => onHoverChange?.(false)}
         >
-          {/* Card Body */}
+          {/* Card Mesh with Full-Bleed Photo and Emerald Border */}
           <mesh material={cardMaterials} castShadow receiveShadow>
             <boxGeometry args={[1.6, 2.4, 0.03]} />
           </mesh>
 
-          {/* Chrome Metallic Ring in the Top Slot Hole */}
+          {/* Chrome Metallic Ring in Top Slot */}
           <mesh position={[0, 1.28, 0]}>
             <torusGeometry args={[0.07, 0.016, 16, 32]} />
-            <meshStandardMaterial color="#f4f4f5" metalness={0.95} roughness={0.12} />
+            <meshStandardMaterial color="#e4e4e7" metalness={0.92} roughness={0.15} />
           </mesh>
 
-          {/* Chrome Swivel Clasp Hardware */}
+          {/* Chrome Metallic Clasp */}
           <mesh position={[0, 1.42, 0]}>
             <cylinderGeometry args={[0.05, 0.05, 0.14, 16]} />
-            <meshStandardMaterial color="#e4e4e7" metalness={0.95} roughness={0.15} />
-          </mesh>
-
-          {/* Swivel Clasp Lever accent */}
-          <mesh position={[0.04, 1.42, 0.03]}>
-            <boxGeometry args={[0.02, 0.08, 0.02]} />
-            <meshStandardMaterial color="#a1a1aa" metalness={0.9} roughness={0.2} />
+            <meshStandardMaterial color="#d4d4d8" metalness={0.92} roughness={0.15} />
           </mesh>
         </group>
       </RigidBody>
@@ -345,14 +352,20 @@ function LanyardPhysicsRig({ textures, onPointerOver, onPointerOut }) {
 }
 
 /**
- * Main LanyardBadge Component
+ * Main LanyardBadge Component with Layering & Stacking Context Optimization
  */
 export default function LanyardBadge() {
+  const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [texturesReady, setTexturesReady] = useState(false);
   const [textures, setTextures] = useState({ band: null, front: null, back: null });
 
-  // Generate high-resolution card and ribbon textures with developer photo
+  // Manage interactive pointer events:
+  // When dragging, canvas captures all pointer events;
+  // When idle, hovering over card enables drag while allowing clicks to pass through to buttons on the right.
+  const [interactive, setInteractive] = useState(false);
+
   useEffect(() => {
     const profileImg = new Image();
     profileImg.src = '/profile.jpg';
@@ -366,7 +379,6 @@ export default function LanyardBadge() {
     };
 
     profileImg.onerror = () => {
-      // Fallback if image fails to load
       const band = createLanyardTexture();
       const front = createFrontCardTexture(null);
       const back = createBackCardTexture();
@@ -375,38 +387,60 @@ export default function LanyardBadge() {
     };
   }, []);
 
+  const handleMouseMove = (e) => {
+    if (isDragging) return;
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    // Enable interaction when cursor is in the left 60% of the canvas area where badge hangs
+    setInteractive(x < rect.width * 0.65 || isHovered);
+  };
+
   return (
-    <div className="relative w-full h-[540px] sm:h-[620px] lg:h-[660px] flex items-center justify-center select-none overflow-visible">
-      {/* Visual top lanyard extension fading behind the sticky top navigation */}
-      <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-8 h-20 bg-emerald-900/60 blur-[1px] pointer-events-none z-10" />
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative w-full h-[560px] sm:h-[640px] lg:h-[680px] flex items-center justify-center select-none overflow-visible -mt-16 sm:-mt-20 z-20"
+    >
+      {/* Visual top strap extension reaching into the top navigation bar */}
+      <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-8 h-24 bg-emerald-900/60 blur-[1px] pointer-events-none z-10" />
 
-      {/* 3D Canvas Scene */}
       {texturesReady ? (
-        <Canvas
-          camera={{ position: [0, 0, 12.5], fov: 25 }}
-          gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
-          className={`w-full h-full ${isHovered ? 'cursor-grab' : 'cursor-default'}`}
+        <div
+          className={`w-full h-full ${
+            interactive || isDragging ? 'pointer-events-auto' : 'pointer-events-none'
+          } ${isHovered ? 'cursor-grab' : 'cursor-default'}`}
         >
-          {/* Lighting */}
-          <ambientLight intensity={1.8} />
-          <directionalLight position={[5, 6, 6]} intensity={2.8} />
-          <directionalLight position={[-6, 4, -4]} intensity={1.5} color="#10b981" />
-          <pointLight position={[0, -2, 4]} intensity={1.2} color="#f0fdf4" />
+          <Canvas
+            camera={{ position: [0, 0, 13.5], fov: 24 }}
+            gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+            className="w-full h-full overflow-visible"
+          >
+            {/* Pure white, balanced neutral studio lighting to eliminate color shifts */}
+            <ambientLight intensity={1.6} color="#ffffff" />
+            <directionalLight position={[0, 5, 8]} intensity={2.2} color="#ffffff" />
+            <directionalLight position={[-4, 2, -3]} intensity={0.8} color="#f4f4f5" />
 
-          {/* Rapier Physics World */}
-          <Physics interpolate gravity={[0, -36, 0]} timeStep={1 / 60}>
-            <LanyardPhysicsRig
-              textures={textures}
-              onPointerOver={() => setIsHovered(true)}
-              onPointerOut={() => setIsHovered(false)}
-            />
-          </Physics>
-        </Canvas>
+            {/* Rapier Physics with extra solver iterations for zero-glitch ribbon */}
+            <Physics interpolate gravity={[0, -32, 0]} numSolverIterations={12} timeStep={1 / 60}>
+              <LanyardPhysicsRig
+                textures={textures}
+                onDragChange={(drag) => {
+                  setIsDragging(drag);
+                  if (drag) setInteractive(true);
+                }}
+                onHoverChange={(hov) => {
+                  setIsHovered(hov);
+                  if (hov) setInteractive(true);
+                }}
+              />
+            </Physics>
+          </Canvas>
+        </div>
       ) : (
-        /* Smooth loading fallback placeholder */
         <div className="flex flex-col items-center justify-center gap-3">
           <div className="w-10 h-10 border-3 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
-          <span className="text-xs font-mono text-zinc-400">Loading 3D Physics Lanyard...</span>
+          <span className="text-xs font-mono text-zinc-400">Initializing 3D Card...</span>
         </div>
       )}
     </div>
