@@ -16,39 +16,63 @@ const Navbar = ({ isDark, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Dynamic IntersectionObserver to track sections as the user scrolls naturally past each section's midpoint
   useEffect(() => {
+    const sectionIds = navLinks.map((link) => link.href.substring(1));
+    const sectionElements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        root: null,
+        // Root margin triggers as the section crosses the upper-middle viewport
+        rootMargin: '-20% 0px -45% 0px',
+        threshold: 0,
+      }
+    );
+
+    sectionElements.forEach((el) => observer.observe(el));
+
+    // Handle top edge scroll state
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
-
-      const sections = navLinks.map((link) => link.href.substring(1));
-      const scrollPosition = window.scrollY + 120;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          break;
-        }
+      if (window.scrollY < 120) {
+        setActiveSection('home');
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
+  // Programmatic ultra-smooth scroll accounting for sticky header height
   const scrollToSection = (e, href) => {
     e.preventDefault();
     const id = href.replace('#', '');
     const element = document.getElementById(id);
     if (element) {
-      const topOffset = 72; // Header height allowance
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: elementPosition - topOffset,
-        behavior: 'smooth'
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
       });
       setActiveSection(id);
       setMobileMenuOpen(false);
+
+      if (window.history.pushState) {
+        window.history.pushState(null, '', href);
+      }
     }
   };
 
@@ -87,11 +111,12 @@ const Navbar = ({ isDark, toggleTheme }) => {
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
                 }`}
               >
+                {/* Active Nav Indicator with layoutId="activeNav" */}
                 {isActive && (
                   <motion.div
-                    layoutId="activePill"
+                    layoutId="activeNav"
                     className="absolute inset-0 bg-emerald-600 dark:bg-emerald-500 rounded-full shadow-sm"
-                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
                 <span className="relative z-10">{link.name}</span>
@@ -106,17 +131,17 @@ const Navbar = ({ isDark, toggleTheme }) => {
           <a
             href="#contact"
             onClick={(e) => scrollToSection(e, '#contact')}
-            className="relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-95 transition-all"
+            className="relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
           >
             <Sparkles size={14} className="animate-pulse" />
             <span>Hire Me</span>
           </a>
 
-          {/* Theme Toggle Switch (Immediately to the right of Hire Me) */}
+          {/* Theme Toggle Switch */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle Night/Light theme"
-            className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-colors focus:outline-none"
+            className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-colors focus:outline-none cursor-pointer"
           >
             {isDark ? (
               <Sun size={18} className="text-amber-400 animate-[spin_10s_linear_infinite]" />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Send, Github, Linkedin, MapPin, CheckCircle2, MessageSquare, Clock } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { personalInfo } from '../data/portfolioData';
 
 const Contact = () => {
@@ -47,11 +48,11 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 relative border-t border-zinc-200 dark:border-zinc-800/80">
+    <SectionWrapper id="contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div variants={fadeInUp} className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold uppercase tracking-wider mb-3">
             <Mail size={14} />
             <span>Get In Touch</span>
@@ -62,13 +63,18 @@ const Contact = () => {
           <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
             Seeking opportunities for professional internships, freelance contracts, or technical collaborations.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Two-Column Contact Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
+        {/* Two-Column Contact Layout with Staggered Cascading */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10"
+        >
           {/* Left Column: Direct Info & Social Cards */}
-          <div className="lg:col-span-5 space-y-6">
+          <motion.div variants={fadeInUp} className="lg:col-span-5 space-y-6">
             
             {/* Quick Pitch Box */}
             <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
@@ -146,10 +152,10 @@ const Contact = () => {
               </div>
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right Column: Interactive Contact Form */}
-          <div className="lg:col-span-7">
+          <motion.div variants={fadeInUp} className="lg:col-span-7">
             <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm relative">
               <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
                 <MessageSquare size={20} className="text-emerald-500" />
@@ -257,12 +263,12 @@ const Contact = () => {
                 </form>
               )}
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
       </div>
-    </section>
+    </SectionWrapper>
   );
 };
 

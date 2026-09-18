@@ -1,15 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Calendar, MapPin, Award, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { GraduationCap, Calendar, MapPin, Award, CheckCircle2, Sparkles } from 'lucide-react';
+import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { educationData } from '../data/portfolioData';
 
 const Education = () => {
   return (
-    <section id="education" className="py-20 relative border-t border-zinc-200 dark:border-zinc-800/80">
+    <SectionWrapper id="education">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading with Clean Sans-Serif Typography */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div variants={fadeInUp} className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold uppercase tracking-wider mb-3">
             <GraduationCap size={14} />
             <span>Academic Background</span>
@@ -20,7 +21,7 @@ const Education = () => {
           <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
             Continuous technical growth from senior high school foundations to university software engineering.
           </p>
-        </div>
+        </motion.div>
 
         {/* Continuous Connected Vertical Timeline */}
         <div className="max-w-4xl mx-auto relative">
@@ -28,7 +29,14 @@ const Education = () => {
           {/* Continuous Vertical Accent Line connecting top card to bottom card */}
           <div className="absolute left-4 sm:left-5 top-4 bottom-8 w-0.5 bg-gradient-to-b from-emerald-500 via-emerald-500/80 to-emerald-500/30 -translate-x-1/2 rounded-full pointer-events-none" />
 
-          <div className="space-y-12">
+          {/* Staggered Timeline Items */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            className="space-y-12"
+          >
             {educationData.map((edu, idx) => {
               const isCollege = idx === 0;
               const isCompleted = edu.status === "Completed";
@@ -36,10 +44,7 @@ const Education = () => {
               return (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.15 }}
+                  variants={fadeInUp}
                   className="relative flex items-start group"
                 >
                   {/* Timeline Dot Marker (Neatly tucked along the left edge) */}
@@ -147,12 +152,12 @@ const Education = () => {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
 
         </div>
 
       </div>
-    </section>
+    </SectionWrapper>
   );
 };
 

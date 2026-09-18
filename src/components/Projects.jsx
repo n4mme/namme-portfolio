@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FolderGit2, ExternalLink, Github, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
+import { FolderGit2, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide-react';
+import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { projectList } from '../data/portfolioData';
 
 const categories = ['All', 'Full Stack', 'Mobile', 'AI Tools'];
@@ -13,11 +14,14 @@ const Projects = () => {
     : projectList.filter((p) => p.category === activeCategory);
 
   return (
-    <section id="projects" className="py-20 relative border-t border-zinc-200 dark:border-zinc-800/80">
+    <SectionWrapper id="projects">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <motion.div
+          variants={fadeInUp}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-12"
+        >
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold uppercase tracking-wider mb-3">
               <FolderGit2 size={14} />
@@ -47,19 +51,23 @@ const Projects = () => {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Projects Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Projects Grid with Staggered Cascading Cards */}
+        <motion.div
+          layout
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
           <AnimatePresence>
             {filteredProjects.map((project) => (
               <motion.div
                 key={project.id}
                 layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
+                variants={fadeInUp}
                 className="flex flex-col justify-between rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl dark:hover:border-zinc-700 transition-all group overflow-hidden"
               >
                 {/* Top Card Section */}
@@ -111,7 +119,7 @@ const Projects = () => {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
                   >
                     <Github size={16} />
                     <span>Source Code</span>
@@ -121,7 +129,7 @@ const Projects = () => {
                     href={project.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors cursor-pointer"
                   >
                     <span>Live Preview</span>
                     <ExternalLink size={14} />
@@ -133,7 +141,7 @@ const Projects = () => {
         </motion.div>
 
       </div>
-    </section>
+    </SectionWrapper>
   );
 };
 

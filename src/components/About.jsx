@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Smartphone, Cpu, Award, BookOpen, Layers, Zap, Rocket } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
+import { Code2, Smartphone, Cpu, BookOpen, Rocket } from 'lucide-react';
+import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 
 const highlights = [
   {
@@ -28,11 +28,11 @@ const highlights = [
 
 const About = () => {
   return (
-    <section id="about" className="py-20 relative border-t border-zinc-200 dark:border-zinc-800/80">
+    <SectionWrapper id="about">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div variants={fadeInUp} className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold uppercase tracking-wider mb-3">
             <BookOpen size={14} />
             <span>About Me</span>
@@ -40,16 +40,21 @@ const About = () => {
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white font-sans">
             Crafting Digital Solutions at the Intersection of Code &amp; AI
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
+          <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
             Based in Bulacan, Philippines &bull; Student, Developer, and Technology Enthusiast
           </p>
-        </div>
+        </motion.div>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          
+        {/* Content Grid with Staggered Cascading Children */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center"
+        >
           {/* Narrative Column */}
-          <div className="lg:col-span-6 space-y-6">
+          <motion.div variants={fadeInUp} className="lg:col-span-6 space-y-6">
             <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
               
@@ -88,15 +93,16 @@ const About = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Cards Grid Column */}
-          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Cards Grid Column with Staggered Items */}
+          <motion.div variants={staggerContainer} className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {highlights.map((item, index) => {
               const Icon = item.icon;
               return (
                 <motion.div
                   key={index}
+                  variants={fadeInUp}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
                   className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-colors"
@@ -113,12 +119,12 @@ const About = () => {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
       </div>
-    </section>
+    </SectionWrapper>
   );
 };
 
