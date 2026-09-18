@@ -19,9 +19,7 @@ Email: ${personalInfo.email} | Location: ${personalInfo.location}
 GitHub: ${personalInfo.github} | LinkedIn: ${personalInfo.linkedin}
 
 EDUCATION
-${educationData[0].degree}
-${educationData[0].institution} (${educationData[0].period})
-${educationData[0].specialization}
+${educationData.map(e => `${e.degree}\n${e.institution} (${e.period})${e.distinction ? ` - ${e.distinction}` : ''}\n${e.specialization}`).join('\n\n')}
 
 TECHNICAL SKILLS
 ${skillCategories.map(c => `${c.title}: ${c.skills.map(s => s.name).join(', ')}`).join('\n')}
@@ -135,20 +133,29 @@ ${projectList.map(p => `- ${p.title} (${p.category}): ${p.description}`).join('\
                 <GraduationCap size={15} />
                 <span>Education</span>
               </h4>
-              <div className="bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h5 className="font-bold text-zinc-900 dark:text-white text-sm">
-                      {educationData[0].degree}
-                    </h5>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                      {educationData[0].institution} &bull; {educationData[0].specialization}
-                    </p>
+              <div className="space-y-2.5">
+                {educationData.map((edu, eIdx) => (
+                  <div key={eIdx} className="bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h5 className="font-bold text-zinc-900 dark:text-white text-sm">
+                          {edu.degree}
+                        </h5>
+                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5">
+                          {edu.institution} &bull; {edu.specialization}
+                          {edu.distinction && (
+                            <span className="ml-2 font-semibold text-amber-500 font-mono text-[11px]">
+                              ({edu.distinction})
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                      <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                        {edu.period}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
-                    {educationData[0].period}
-                  </span>
-                </div>
+                ))}
               </div>
             </div>
 

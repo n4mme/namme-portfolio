@@ -115,13 +115,45 @@ export const educationData = [
   {
     degree: "Bachelor of Science in Information Technology (BSIT)",
     institution: "Bulacan State University (BSU)",
-    period: "2023 - Present",
+    period: "2023 – Present",
+    status: "In Progress",
     specialization: "Major in Web and Mobile Application Development",
-    description: "Rigorous undergraduate curriculum emphasizing software engineering principles, full-stack systems, mobile computing, database management, and emerging AI technologies.",
+    location: "City of Malolos, Bulacan",
+    description: "Rigorous undergraduate curriculum emphasizing software engineering principles, full-stack systems, mobile computing, database management, and modern AI-assisted workflows.",
     highlights: [
       "Specializing in Web & Mobile System Architectures",
-      "Active participant in collegiate programming competitions & hackathons",
-      "Consistently maintaining strong academic standing with project-driven coursework"
+      "Consistently maintaining strong academic standing with project-driven coursework",
+      "Architecting scalable web and mobile software solutions"
+    ],
+    tags: [
+      "Web Systems & Technologies",
+      "Mobile Application Development",
+      "Object-Oriented Programming",
+      "Data Structures & Algorithms",
+      "Database Management Systems",
+      "Information Assurance & Security",
+      "Human-Computer Interaction",
+      "Software Engineering"
+    ]
+  },
+  {
+    degree: "Technical-Vocational-Livelihood (TVL) – Information and Communications Technology (ICT)",
+    institution: "Asian Institute of Science and Technology",
+    period: "2021 – 2023",
+    status: "Completed",
+    specialization: "Senior High School (SHS) – ICT Strand",
+    location: "Bulacan, Philippines",
+    distinction: "Graduated with Honors",
+    description: "Foundational senior high school curriculum focused on computer hardware servicing, introductory software programming, and essential networking systems.",
+    highlights: [
+      "Graduated with Honors",
+      "Comprehensive training in computer systems servicing, setup, and diagnostics",
+      "Foundational skills in programming algorithms and web fundamentals"
+    ],
+    tags: [
+      "Computer Systems Servicing",
+      "Basic Programming & Web Fundamentals",
+      "Network Essentials"
     ]
   }
 ];
