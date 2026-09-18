@@ -50,12 +50,12 @@ const About = () => {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center"
         >
           {/* Narrative Column */}
           <motion.div variants={fadeInUp} className="lg:col-span-6 space-y-6">
-            <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group hover:border-emerald-500/40 dark:hover:border-emerald-500/40 hover:shadow-[0_0_25px_rgba(16,185,129,0.1)] transition-all">
+            <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
               
               <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 flex items-center gap-2">
@@ -68,11 +68,15 @@ const About = () => {
               </p>
 
               <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed mt-4">
-                I believe modern software engineering is catalyzed by combining robust architectural fundamentals with AI-accelerated workflows. By using modern AI developer tools for intelligent prototyping and test-driven iterations, I deliver higher-quality solutions with exceptional agility.
+                I believe software engineering today is undergoing a massive transformation. By mastering <strong className="text-emerald-600 dark:text-emerald-400">AI-assisted workflows</strong>, I synthesize ideas into clean, maintainable, and scalable digital architectures faster than traditional methods allow—without sacrificing code quality or user experience.
               </p>
 
               {/* Quick Info Tags */}
-              <div className="mt-6 pt-6 border-t border-zinc-100 dark:border-zinc-800 grid grid-cols-3 gap-2 text-center">
+              <div className="mt-6 pt-6 border-t border-zinc-100 dark:border-zinc-800/80 grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-xs font-mono text-zinc-400 uppercase">Institution</span>
+                  <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Bulacan State University</p>
+                </div>
                 <div>
                   <span className="text-xs font-mono text-zinc-400 uppercase">Field of Study</span>
                   <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">BS Information Technology</p>
@@ -83,8 +87,8 @@ const About = () => {
                 </div>
                 <div>
                   <span className="text-xs font-mono text-zinc-400 uppercase">Status</span>
-                  <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Available
+                  <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Available for Hire
                   </p>
                 </div>
               </div>
@@ -101,7 +105,7 @@ const About = () => {
                   variants={fadeInUp}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2 }}
-                  className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.12)] transition-all"
+                  className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-colors"
                 >
                   <div className="w-12 h-12 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4">
                     <Icon size={24} />

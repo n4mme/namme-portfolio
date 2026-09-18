@@ -59,7 +59,7 @@ const Projects = () => {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           <AnimatePresence>
@@ -68,17 +68,10 @@ const Projects = () => {
                 key={project.id}
                 layout
                 variants={fadeInUp}
-                className="relative flex flex-col justify-between rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/60 dark:hover:border-emerald-500/60 hover:shadow-[0_0_30px_rgba(16,185,129,0.18)] transition-all duration-300 group overflow-hidden"
+                className="flex flex-col justify-between rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl dark:hover:border-zinc-700 transition-all group overflow-hidden"
               >
-                {/* Continuous rotating gradient border beam on hover */}
-                <div className="absolute -inset-[100%] bg-[conic-gradient(from_0deg,transparent_0_340deg,#10b981_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-[spin_4s_linear_infinite] pointer-events-none -z-10" />
-                <div className="absolute inset-[1px] rounded-[15px] bg-white dark:bg-zinc-900 pointer-events-none -z-10" />
-
-                {/* Diagonal glowing shimmer sweep on hover */}
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent pointer-events-none z-20" />
-
                 {/* Top Card Section */}
-                <div className="p-6 sm:p-8 relative z-10">
+                <div className="p-6 sm:p-8">
                   {/* Category & Featured Badge */}
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700/60">
