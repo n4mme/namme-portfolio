@@ -118,7 +118,7 @@ export const educationData = [
     period: "2023 – Present",
     status: "In Progress",
     specialization: "Major in Web and Mobile Application Development",
-    location: "City of Malolos, Bulacan",
+    location: "Bulacan, Philippines",
     description: "Rigorous undergraduate curriculum emphasizing software engineering principles, full-stack systems, mobile computing, database management, and modern AI-assisted workflows.",
     highlights: [
       "Specializing in Web & Mobile System Architectures",
