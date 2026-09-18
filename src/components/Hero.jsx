@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Download, Sparkles, RefreshCw } from 'lucide-react';
-import SwingingBadge from './SwingingBadge';
+import LanyardBadge from './LanyardBadge';
 import { personalInfo, typewriterPhrases } from '../data/portfolioData';
 
 // Character sets for exact anagram rearrangement
@@ -91,9 +91,9 @@ const Hero = ({ onOpenCV }) => {
         {/* Two-Column Responsive Desktop Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Column: Interactive Swinging ID Badge with Lanyard */}
+          {/* Left Column: 3D Interactive Hanging ID Card & Lanyard */}
           <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
-            <SwingingBadge />
+            <LanyardBadge />
           </div>
 
           {/* Right Column: Typography & Actions */}
