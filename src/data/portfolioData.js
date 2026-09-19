@@ -38,44 +38,24 @@ export const projectList = [
 
 export const skillCategories = [
   {
+    title: "AI-Assisted Software Development",
+    description: "Accelerating the software development lifecycle by integrating modern AI tooling for rapid prototyping, intelligent debugging, and automated code generation. Translating complex business logic into reliable, production-grade applications with enhanced velocity.",
+    skills: ["Claude", "ChatGPT-4", "GitHub Copilot", "Cursor", "v0 by Vercel"]
+  },
+  {
     title: "Frontend Engineering",
-    skills: [
-      { name: "React / JSX", level: "Advanced" },
-      { name: "Tailwind CSS", level: "Advanced" },
-      { name: "JavaScript (ES6+)", level: "Advanced" },
-      { name: "TypeScript", level: "Intermediate" },
-      { name: "HTML5 / Semantic SEO", level: "Expert" },
-      { name: "Framer Motion", level: "Intermediate" }
-    ]
+    description: "Crafting performant, highly responsive, and accessible user interfaces with modern component architectures and scalable utility design systems. Focused on delivering fluid user experiences and minimal layout shifts.",
+    skills: ["React", "Next.js", "Vite", "Tailwind CSS", "Bootstrap", "JavaScript"]
   },
   {
     title: "Backend & Databases",
-    skills: [
-      { name: "Node.js & Express", level: "Intermediate" },
-      { name: "RESTful API Design", level: "Advanced" },
-      { name: "PostgreSQL & MySQL", level: "Intermediate" },
-      { name: "Firebase / Supabase", level: "Intermediate" },
-      { name: "Authentication (JWT, OAuth)", level: "Intermediate" }
-    ]
+    description: "Architecting secure server-side logic, RESTful APIs, and relational/NoSQL data schemas. Prioritizing structured query efficiency, authentication workflows, and system reliability.",
+    skills: ["Node.js", "Java", "MySQL", "PostgreSQL", "Firebase"]
   },
   {
-    title: "Mobile Development",
-    skills: [
-      { name: "React Native", level: "Intermediate" },
-      { name: "Expo Ecosystem", level: "Intermediate" },
-      { name: "Mobile UI / UX Patterns", level: "Advanced" },
-      { name: "Cross-Platform Layouts", level: "Advanced" }
-    ]
-  },
-  {
-    title: "AI & Developer Tooling",
-    skills: [
-      { name: "AI-Assisted Workflows", level: "Expert" },
-      { name: "Git & GitHub Versioning", level: "Advanced" },
-      { name: "Vite & Modern Bundlers", level: "Advanced" },
-      { name: "Vercel / Cloud Deployment", level: "Advanced" },
-      { name: "Docker Basics", level: "Foundational" }
-    ]
+    title: "Tools & Deployment",
+    description: "Streamlining source control, collaborative UI/UX wireframing, and continuous delivery pipelines. Ensuring seamless transitions from local Git branches to live production environments.",
+    skills: ["Git", "GitHub", "Vercel", "Figma"]
   }
 ];
 

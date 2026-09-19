@@ -22,7 +22,7 @@ EDUCATION
 ${educationData.map(e => `${e.degree}\n${e.institution} (${e.period})${e.distinction ? ` - ${e.distinction}` : ''}\n${e.specialization}`).join('\n\n')}
 
 TECHNICAL SKILLS
-${skillCategories.map(c => `${c.title}: ${c.skills.map(s => s.name).join(', ')}`).join('\n')}
+${skillCategories.map(c => `${c.title}: ${c.skills.map(s => typeof s === 'string' ? s : s.name).join(', ')}`).join('\n')}
 
 FEATURED PROJECTS
 ${projectList.map(p => `- ${p.title} (${p.category}): ${p.description}`).join('\n')}
@@ -172,11 +172,14 @@ ${projectList.map(p => `- ${p.title} (${p.category}): ${p.description}`).join('\
                       {c.title}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      {c.skills.map((s) => (
-                        <span key={s.name} className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-700/60 text-zinc-700 dark:text-zinc-300">
-                          {s.name}
-                        </span>
-                      ))}
+                      {c.skills.map((s) => {
+                        const skillName = typeof s === 'string' ? s : s.name;
+                        return (
+                          <span key={skillName} className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-700/60 text-zinc-700 dark:text-zinc-300">
+                            {skillName}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
