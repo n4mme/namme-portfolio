@@ -49,6 +49,20 @@ export const projectList = [
     featured: true,
     stats: "Collaborative Team Project • Java Desktop Application",
     role: "Java Desktop Application • Team Project"
+  },
+  {
+    id: 3,
+    title: "Biyahele",
+    category: "Full Stack",
+    description: "An Airbnb-inspired full-stack web application designed for seamless travel and stay bookings. Architected and deployed an integrated platform centralizing booking operations, real-time inventory tracking, and transaction analytics, streamlining end-to-end workflows and data visibility into a single cohesive interface.",
+    tags: ["React", "Vite", "Firebase Auth", "Firestore", "PayPal API", "EmailJS"],
+    demoUrl: "https://biyahele.web.app/",
+    githubUrl: null,
+    image: "/biyahele.png",
+    imagePosition: "object-top",
+    featured: true,
+    stats: "Full Stack Developer • Firebase & PayPal Integration",
+    role: "Role: Full Stack Developer"
   }
 ];
 

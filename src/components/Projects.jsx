@@ -30,7 +30,7 @@ const Projects = () => {
               Engineered Applications
             </h2>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">
-              Explore game developments, web platforms, and desktop software.
+              Explore web platforms, full-stack applications, and interactive software.
             </p>
           </div>
 
@@ -62,7 +62,7 @@ const Projects = () => {
           className={`grid gap-8 ${
             filteredProjects.length === 1
               ? 'grid-cols-1 max-w-2xl mx-auto w-full'
-              : 'grid-cols-1 md:grid-cols-2'
+              : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
           }`}
         >
           <AnimatePresence>
@@ -75,7 +75,7 @@ const Projects = () => {
               >
                 {/* Project Image Preview */}
                 {project.image && (
-                  <div className="relative w-full h-64 sm:h-72 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
+                  <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
                     <img
                       src={project.image}
                       alt={project.title}
