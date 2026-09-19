@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Download, Sparkles, RefreshCw } from 'lucide-react';
+import { ArrowUpRight, Download, Sparkles, RefreshCw, Github, Linkedin } from 'lucide-react';
 import LanyardBadge from './LanyardBadge';
 import { personalInfo, typewriterPhrases } from '../data/portfolioData';
 
@@ -90,7 +90,7 @@ const Hero = ({ onOpenCV }) => {
       {/* 3D Interactive Hanging ID Card & Lanyard (Full-Hero Viewport Canvas) */}
       <LanyardBadge />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 pointer-events-none">
         {/* Two-Column Responsive Desktop Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[560px]">
           
@@ -98,7 +98,7 @@ const Hero = ({ onOpenCV }) => {
           <div className="lg:col-span-5 h-[440px] lg:h-full pointer-events-none order-2 lg:order-1" />
 
           {/* Right Column: Typography & Actions */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2">
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2 pointer-events-auto relative z-30">
             
             {/* Top Subtitle / Student Identity Pill */}
             <motion.div
@@ -173,10 +173,18 @@ const Hero = ({ onOpenCV }) => {
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-8">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-8 relative z-30 pointer-events-auto">
               {/* Primary Button: View Projects */}
               <a
                 href="#projects"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById('projects');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (window.history.pushState) window.history.pushState(null, '', '#projects');
+                  }
+                }}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
               >
                 <span>View Projects</span>
@@ -193,6 +201,30 @@ const Hero = ({ onOpenCV }) => {
               >
                 <Download size={18} className="text-emerald-500" />
                 <span>Download CV</span>
+              </a>
+
+              {/* LinkedIn Button */}
+              <a
+                href={personalInfo.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-zinc-800 dark:text-zinc-200 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-700 hover:border-[#0A66C2]/60 dark:hover:border-[#0A66C2]/60 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer group"
+                aria-label="Visit Emmanuel Nantes on LinkedIn"
+              >
+                <Linkedin size={18} className="text-[#0A66C2]" />
+                <span>LinkedIn</span>
+              </a>
+
+              {/* GitHub Button */}
+              <a
+                href={personalInfo.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-zinc-800 dark:text-zinc-200 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-700 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer group"
+                aria-label="Visit Emmanuel Nantes on GitHub"
+              >
+                <Github size={18} className="text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-500 transition-colors" />
+                <span>GitHub</span>
               </a>
             </div>
 

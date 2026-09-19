@@ -432,7 +432,7 @@ export default function LanyardBadge() {
   return (
     <div
       ref={canvasContainerRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible"
+      className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
     >
       {texturesReady ? (
         <div
