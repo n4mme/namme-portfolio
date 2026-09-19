@@ -63,6 +63,21 @@ export const projectList = [
     featured: true,
     stats: "Full Stack Developer • Firebase & PayPal Integration",
     role: "Role: Full Stack Developer"
+  },
+  {
+    id: 4,
+    title: "GOMS Output - School Mobile Application",
+    category: "UI/UX Design",
+    description: "A school mobile application UI/UX project designed in Figma, featuring a clean and modern interface with onboarding, sign-in, account creation, and user-focused mobile navigation.",
+    tags: ["Figma", "Mobile Application", "UI/UX Design", "School Project", "Prototyping", "Interface Design"],
+    demoUrl: "https://www.figma.com/design/7lsKIkL2odBRDNEWjBuPTv/GOMS-Output?node-id=1-205&t=agy9utEao49X7q85-0",
+    demoLabel: "View Figma Design",
+    githubUrl: null,
+    image: "/goms-output.png",
+    imagePosition: "object-contain bg-zinc-950 py-3",
+    featured: true,
+    stats: "Figma UI/UX • Interactive Mobile Prototype",
+    role: "UI/UX Designer • School Project"
   }
 ];
 
