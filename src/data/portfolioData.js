@@ -31,8 +31,24 @@ export const projectList = [
     demoUrl: "https://kingdom-break.vercel.app/",
     githubUrl: null,
     image: "/kingdom-break.jpg",
+    imagePosition: "object-[center_15%]",
     featured: true,
-    stats: "Assistant Programmer & Level Designer • Made with Unity"
+    stats: "Assistant Programmer & Level Designer • Made with Unity",
+    role: "Role: Assistant Programmer & Level Designer"
+  },
+  {
+    id: 2,
+    title: "Library Management System",
+    category: "Desktop App",
+    description: "A Java-based desktop application developed as a collaborative team project for streamlining institutional library administration. Features dedicated modules for cataloging books, managing member and librarian accounts, processing real-time borrowing and returned book transactions, and organizing comprehensive archival records.",
+    tags: ["Java", "OOP", "Desktop Application", "Database Management", "Team Project"],
+    demoUrl: null,
+    githubUrl: "https://github.com/Luckyyy-spd/LibraryManagementSystem.git",
+    image: "/library-management.png",
+    imagePosition: "object-top",
+    featured: true,
+    stats: "Collaborative Team Project • Java Desktop Application",
+    role: "Java Desktop Application • Team Project"
   }
 ];
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FolderGit2, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide-react';
+import { FolderGit2, ExternalLink, Github, Sparkles, CheckCircle2, Monitor } from 'lucide-react';
 import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { projectList } from '../data/portfolioData';
 
@@ -30,7 +30,7 @@ const Projects = () => {
               Engineered Applications
             </h2>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">
-              Explore game developments, web platforms, and mobile software.
+              Explore game developments, web platforms, and desktop software.
             </p>
           </div>
 
@@ -61,7 +61,7 @@ const Projects = () => {
           viewport={{ once: true, amount: 0.15 }}
           className={`grid gap-8 ${
             filteredProjects.length === 1
-              ? 'grid-cols-1 max-w-3xl mx-auto w-full'
+              ? 'grid-cols-1 max-w-2xl mx-auto w-full'
               : 'grid-cols-1 md:grid-cols-2'
           }`}
         >
@@ -75,24 +75,13 @@ const Projects = () => {
               >
                 {/* Project Image Preview */}
                 {project.image && (
-                  <div className="relative w-full h-72 sm:h-96 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
+                  <div className="relative w-full h-64 sm:h-72 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-700 ease-out"
+                      className={`w-full h-full object-cover ${project.imagePosition || 'object-top'} group-hover:scale-105 transition-transform duration-700 ease-out`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-80" />
-                    <div className="absolute top-4 right-4 z-10">
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-zinc-900/80 hover:bg-emerald-600 backdrop-blur-md border border-white/10 hover:border-emerald-500/50 shadow-md transition-all cursor-pointer"
-                      >
-                        <span>Play Live</span>
-                        <ExternalLink size={13} />
-                      </a>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent opacity-70" />
                   </div>
                 )}
 
@@ -153,19 +142,26 @@ const Projects = () => {
                     </a>
                   ) : (
                     <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
-                      Role: Assistant Programmer &amp; Level Designer
+                      {project.role}
                     </span>
                   )}
 
-                  <a
-                    href={project.demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors cursor-pointer"
-                  >
-                    <span>Live Preview</span>
-                    <ExternalLink size={14} />
-                  </a>
+                  {project.demoUrl ? (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors cursor-pointer"
+                    >
+                      <span>Live Preview</span>
+                      <ExternalLink size={14} />
+                    </a>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-500 dark:text-zinc-400">
+                      <Monitor size={14} className="text-emerald-500" />
+                      <span>Desktop Application</span>
+                    </span>
+                  )}
                 </div>
               </motion.div>
             ))}
