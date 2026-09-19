@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Send, Github, Linkedin, MapPin, CheckCircle2, MessageSquare, Clock } from 'lucide-react';
+import { Mail, Send, Github, Linkedin, MapPin, CheckCircle2, MessageSquare, Clock, ExternalLink } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { personalInfo } from '../data/portfolioData';
@@ -107,12 +107,31 @@ const Contact = () => {
                 <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                   <Mail size={20} />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <span className="text-xs font-mono text-zinc-400 uppercase">Direct Email</span>
-                  <p className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <p className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
                     {personalInfo.email}
                   </p>
                 </div>
+              </a>
+
+              {/* LinkedIn Profile Card */}
+              <a
+                href={personalInfo.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-[#0A66C2]/60 dark:hover:border-[#0A66C2]/60 transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center shrink-0">
+                  <Linkedin size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-mono text-zinc-400 uppercase">LinkedIn Profile</span>
+                  <p className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-[#0A66C2] transition-colors truncate">
+                    linkedin.com/in/emmanuel-nantes
+                  </p>
+                </div>
+                <ExternalLink size={16} className="text-zinc-400 group-hover:text-[#0A66C2] transition-colors shrink-0" />
               </a>
 
               {/* Location Card */}
@@ -128,28 +147,24 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Social Channels */}
-              <div className="grid grid-cols-2 gap-3">
-                <a
-                  href={personalInfo.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors"
-                >
-                  <Github size={18} className="text-zinc-800 dark:text-zinc-200" />
-                  <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">GitHub</span>
-                </a>
-
-                <a
-                  href={personalInfo.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors"
-                >
-                  <Linkedin size={18} className="text-blue-500" />
-                  <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">LinkedIn</span>
-                </a>
-              </div>
+              {/* GitHub Profile Card */}
+              <a
+                href={personalInfo.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 group-hover:text-emerald-500 flex items-center justify-center shrink-0 transition-colors">
+                  <Github size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-mono text-zinc-400 uppercase">GitHub Profile</span>
+                  <p className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-emerald-500 transition-colors truncate">
+                    github.com/n4mme
+                  </p>
+                </div>
+                <ExternalLink size={16} className="text-zinc-400 group-hover:text-emerald-500 transition-colors shrink-0" />
+              </a>
             </div>
 
           </motion.div>

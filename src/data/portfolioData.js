@@ -6,9 +6,9 @@ export const personalInfo = {
   degree: "Bachelor of Science in Information Technology (BSIT)",
   specialization: "Web & Mobile Application Development",
   location: "Bulacan, Philippines",
-  email: "emmannantz@gmail.com",
+  email: "emmannantes16@gmail.com",
   github: "https://github.com/n4mme",
-  linkedin: "https://linkedin.com/in/emmanuelnantes",
+  linkedin: "https://www.linkedin.com/in/emmanuel-nantes",
   availability: "Open to Professional Internship and Early-Career Opportunities",
   bio: "BSIT student specializing in Web & Mobile Development at Bulacan State University. I architect modern web and mobile applications by leveraging AI-assisted workflows to rapidly move from concept to scalable digital products.",
   aboutExtended: "I am deeply passionate about bridging human-centered design with resilient full-stack architectures. Through combining modern JavaScript ecosystems (React, Node.js) with cross-platform mobile development and cutting-edge AI engineering tools, I build high-impact digital solutions with speed and precision."
