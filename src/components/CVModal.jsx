@@ -11,32 +11,12 @@ const CVModal = ({ isOpen, onClose }) => {
   };
 
   const handleDownload = () => {
-    // Generate a downloadable text/markdown resume or open print dialog
-    const cvContent = `
-EMMANUEL NANTES (NAMME)
-Full Stack & Mobile Developer
-Email: ${personalInfo.email} | Location: ${personalInfo.location}
-GitHub: ${personalInfo.github} | LinkedIn: ${personalInfo.linkedin}
-
-EDUCATION
-${educationData.map(e => `${e.degree}\n${e.institution} (${e.period})${e.distinction ? ` - ${e.distinction}` : ''}\n${e.specialization}`).join('\n\n')}
-
-TECHNICAL SKILLS
-${skillCategories.map(c => `${c.title}: ${c.skills.map(s => typeof s === 'string' ? s : s.name).join(', ')}`).join('\n')}
-
-FEATURED PROJECTS
-${projectList.map(p => `- ${p.title} (${p.category}): ${p.description}`).join('\n')}
-    `.trim();
-
-    const blob = new Blob([cvContent], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = url;
-    link.download = 'Emmanuel_Nantes_CV.txt';
+    link.href = '/Emmanuel_Nantes_CV.pdf';
+    link.download = 'Emmanuel_Nantes_CV.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
   };
 
   return (
@@ -76,14 +56,17 @@ ${projectList.map(p => `- ${p.title} (${p.category}): ${p.description}`).join('\
               >
                 <Printer size={16} />
               </button>
-              <button
-                onClick={handleDownload}
-                aria-label="Download CV"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
+              <a
+                href="/Emmanuel_Nantes_CV.pdf"
+                download="Emmanuel_Nantes_CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Download CV PDF"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors cursor-pointer"
               >
                 <Download size={14} />
-                <span>Download</span>
-              </button>
+                <span>Download PDF</span>
+              </a>
               <button
                 onClick={onClose}
                 aria-label="Close modal"

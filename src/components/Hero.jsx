@@ -184,13 +184,16 @@ const Hero = ({ onOpenCV }) => {
               </a>
 
               {/* Secondary Button: Download CV */}
-              <button
-                onClick={onOpenCV}
+              <a
+                href="/Emmanuel_Nantes_CV.pdf"
+                download="Emmanuel_Nantes_CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-zinc-800 dark:text-zinc-200 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-700 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
               >
                 <Download size={18} className="text-emerald-500" />
                 <span>Download CV</span>
-              </button>
+              </a>
             </div>
 
             {/* Status / Availability Badge with Pulsing Green Indicator Dot */}
