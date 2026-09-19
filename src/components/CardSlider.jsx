@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ExternalLink, Github, Sparkles, CheckCircle2, Monitor } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide-react';
 
 /**
  * Sample mock items for standalone modular usage
@@ -195,6 +195,36 @@ const CardSlider = ({ items = sampleMockItems }) => {
                         className={`w-full h-full object-cover ${project.imagePosition || 'object-top'} group-hover:scale-105 transition-transform duration-700 ease-out`}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent opacity-70" />
+
+                      {/* Directory / Action Button in Top Right of Picture */}
+                      {(project.demoUrl || project.githubUrl) && (
+                        <div className="absolute top-3.5 right-3.5 z-20 flex items-center gap-2">
+                          {project.githubUrl && (
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-zinc-900/85 hover:bg-emerald-600 backdrop-blur-md border border-white/15 hover:border-emerald-500/50 shadow-md hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] active:scale-95 transition-all cursor-pointer group/btn"
+                            >
+                              <Github size={13} />
+                              <span>Source Code</span>
+                            </a>
+                          )}
+                          {project.demoUrl && (
+                            <a
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-zinc-900/85 hover:bg-emerald-600 backdrop-blur-md border border-white/15 hover:border-emerald-500/50 shadow-md hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] active:scale-95 transition-all cursor-pointer group/btn"
+                            >
+                              <span>{project.demoLabel || "Live Preview"}</span>
+                              <ExternalLink size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -236,40 +266,15 @@ const CardSlider = ({ items = sampleMockItems }) => {
                     </div>
                   </div>
 
-                  {/* Card Footer Actions */}
+                  {/* Card Footer */}
                   <div className="px-6 py-4 bg-zinc-50 dark:bg-zinc-950/40 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between mt-auto">
-                    {project.githubUrl ? (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
-                      >
-                        <Github size={16} />
-                        <span>Source Code</span>
-                      </a>
-                    ) : (
-                      <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 truncate max-w-[150px] sm:max-w-none">
-                        {project.role}
-                      </span>
-                    )}
-
-                    {project.demoUrl ? (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors cursor-pointer"
-                      >
-                        <span>{project.demoLabel || "Live Preview"}</span>
-                        <ExternalLink size={14} />
-                      </a>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-500 dark:text-zinc-400">
-                        <Monitor size={14} className="text-emerald-500" />
-                        <span>Desktop Application</span>
-                      </span>
-                    )}
+                    <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 truncate">
+                      {project.role}
+                    </span>
+                    <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                      <span>{project.category}</span>
+                    </div>
                   </div>
                 </motion.div>
               </div>
@@ -300,6 +305,36 @@ const CardSlider = ({ items = sampleMockItems }) => {
                       className={`w-full h-full object-cover ${project.imagePosition || 'object-top'} group-hover:scale-105 transition-transform duration-700 ease-out`}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent opacity-70" />
+
+                    {/* Directory / Action Button in Top Right of Picture */}
+                    {(project.demoUrl || project.githubUrl) && (
+                      <div className="absolute top-3.5 right-3.5 z-20 flex items-center gap-2">
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-zinc-900/85 hover:bg-emerald-600 backdrop-blur-md border border-white/15 hover:border-emerald-500/50 shadow-md hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] active:scale-95 transition-all cursor-pointer group/btn"
+                          >
+                            <Github size={13} />
+                            <span>Source Code</span>
+                          </a>
+                        )}
+                        {project.demoUrl && (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-zinc-900/85 hover:bg-emerald-600 backdrop-blur-md border border-white/15 hover:border-emerald-500/50 shadow-md hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] active:scale-95 transition-all cursor-pointer group/btn"
+                          >
+                            <span>{project.demoLabel || "Live Preview"}</span>
+                            <ExternalLink size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -341,40 +376,15 @@ const CardSlider = ({ items = sampleMockItems }) => {
                   </div>
                 </div>
 
-                {/* Card Footer Actions */}
+                {/* Card Footer */}
                 <div className="px-6 py-4 bg-zinc-50 dark:bg-zinc-950/40 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between mt-auto">
-                  {project.githubUrl ? (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
-                    >
-                      <Github size={16} />
-                      <span>Source Code</span>
-                    </a>
-                  ) : (
-                    <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
-                      {project.role}
-                    </span>
-                  )}
-
-                  {project.demoUrl ? (
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors cursor-pointer"
-                    >
-                      <span>{project.demoLabel || "Live Preview"}</span>
-                      <ExternalLink size={14} />
-                    </a>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-500 dark:text-zinc-400">
-                      <Monitor size={14} className="text-emerald-500" />
-                      <span>Desktop Application</span>
-                    </span>
-                  )}
+                  <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 truncate">
+                    {project.role}
+                  </span>
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                    <span>{project.category}</span>
+                  </div>
                 </div>
               </motion.div>
             ))}
