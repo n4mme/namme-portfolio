@@ -1,10 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { ShieldCheck, Cpu, QrCode, Sparkles } from 'lucide-react';
 
 const SwingingBadge = () => {
   const containerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' ? window.innerWidth > 768 : true
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const media = window.matchMedia('(min-width: 769px)');
+    const update = (e) => setIsDesktop(e.matches);
+    setIsDesktop(media.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   // 2D Motion values for free movement in X and Y
   const dragX = useMotionValue(0);
@@ -32,43 +44,56 @@ const SwingingBadge = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full flex flex-col items-center select-none pt-0 pb-6"
+      className="relative w-full flex flex-col items-center select-none pt-2 md:pt-0 pb-6"
       style={{ perspective: 1200 }}
     >
       {/* 
-        Top anchor positioned behind the sticky top navbar.
-        Navbar is sticky top-0 z-50; this container sits at z-20 so the lace emerges naturally from behind the nav.
+        Top anchor positioned behind the sticky top navbar on desktop.
+        Navbar is sticky top-0 z-50; on desktop this container sits at z-20 so the lace emerges naturally from behind the nav.
+        On mobile (<= 768px), negative margin is reset to mt-0 so the badge sits cleanly at the top.
       */}
-      <div className="relative -mt-16 sm:-mt-20 z-20 flex flex-col items-center">
+      <div className="relative mt-0 md:-mt-16 lg:-mt-20 z-20 flex flex-col items-center">
         
-        {/* Top Lace Entry Point (disappears behind top navigation) */}
-        <div className="w-16 h-4 bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-b-md shadow-md border-t border-zinc-700/50 flex items-center justify-center opacity-80">
+        {/* Top Lace Entry Point: Only visible on desktop/larger screens (>768px) */}
+        <div className="hidden md:flex lanyard-lace w-16 h-4 bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-b-md shadow-md border-t border-zinc-700/50 items-center justify-center opacity-80">
           <div className="w-8 h-1 bg-zinc-950 rounded-full" />
         </div>
 
         {/* 
           Pendulum Assembly:
-          Pivots from top center (origin-top), with full 2D drag physics (X and Y)
+          On desktop: Pivots from top center (origin-top), with full 2D drag physics (X and Y)
+          On mobile: Drag, swinging animation, and swing offsets are completely disabled / reset.
         */}
         <motion.div
-          className="relative flex flex-col items-center cursor-grab active:cursor-grabbing origin-top"
-          drag
+          className="relative flex flex-col items-center cursor-default md:cursor-grab md:active:cursor-grabbing origin-top badge-mobile-static"
+          drag={isDesktop}
           dragConstraints={{ left: -160, right: 160, top: -140, bottom: 180 }}
           dragElastic={0.25}
-          onDragStart={() => setIsDragging(true)}
+          onDragStart={() => {
+            if (isDesktop) setIsDragging(true);
+          }}
           onDragEnd={() => {
             setIsDragging(false);
             dragX.set(0);
             dragY.set(0);
           }}
-          style={{
-            x: smoothX,
-            y: smoothY,
-            rotate: lanyardRotate,
-            transformOrigin: 'top center',
-          }}
+          style={
+            isDesktop
+              ? {
+                  x: smoothX,
+                  y: smoothY,
+                  rotate: lanyardRotate,
+                  transformOrigin: 'top center',
+                }
+              : {
+                  x: 0,
+                  y: 0,
+                  rotate: 0,
+                  transform: 'none',
+                }
+          }
           animate={
-            !isDragging
+            isDesktop && !isDragging
               ? {
                   rotate: [0, 1.5, -1.5, 0.8, -0.8, 0],
                   y: [0, -2, 0, -1.5, 0],
@@ -78,11 +103,15 @@ const SwingingBadge = () => {
                     ease: 'easeInOut',
                   },
                 }
-              : {}
+              : {
+                  rotate: 0,
+                  y: 0,
+                  x: 0,
+                }
           }
         >
-          {/* Lanyard Fabric Ribbon */}
-          <div className="relative flex flex-col items-center">
+          {/* Lanyard Fabric Ribbon & Hanging Graphics: Completely hidden on mobile / small screens */}
+          <div className="hidden md:flex lanyard-graphic relative flex-col items-center">
             {/* Long realistic fabric ribbon reaching from behind the navbar */}
             <motion.div
               style={{
@@ -112,7 +141,7 @@ const SwingingBadge = () => {
             </motion.div>
 
             {/* Metallic Clasp & Swivel Hardware */}
-            <div className="flex flex-col items-center -mt-0.5 z-10">
+            <div className="flex flex-col items-center -mt-0.5 z-10 lanyard-hardware">
               {/* Metal Crimp Bar */}
               <div className="w-9 h-2.5 bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-400 rounded-xs shadow border border-zinc-500" />
               
@@ -126,24 +155,36 @@ const SwingingBadge = () => {
             </div>
           </div>
 
-          {/* ID Card Badge with 3D Tilt & Secondary Swivel */}
+          {/* ID Card Badge:
+              On desktop: 3D Tilt & Secondary Swivel
+              On mobile: Reset to static, centered, no swing/tilt offsets, maintaining clean borders
+          */}
           <motion.div
-            style={{
-              rotateZ: cardSecondaryRotate,
-              rotateX: cardRotateX,
-              rotateY: cardRotateY,
-              transformOrigin: 'top center',
-            }}
-            whileHover={{ scale: 1.02 }}
-            className="relative -mt-2 w-[280px] sm:w-[310px] rounded-2xl p-[1px] bg-gradient-to-b from-zinc-500 via-zinc-400 to-zinc-700 shadow-2xl transition-shadow duration-300 hover:shadow-emerald-500/15 cursor-grab active:cursor-grabbing"
+            style={
+              isDesktop
+                ? {
+                    rotateZ: cardSecondaryRotate,
+                    rotateX: cardRotateX,
+                    rotateY: cardRotateY,
+                    transformOrigin: 'top center',
+                  }
+                : {
+                    rotateZ: 0,
+                    rotateX: 0,
+                    rotateY: 0,
+                    transform: 'none',
+                  }
+            }
+            whileHover={isDesktop ? { scale: 1.02 } : undefined}
+            className="relative mt-0 md:-mt-2 w-[280px] sm:w-[310px] rounded-2xl p-[1px] bg-gradient-to-b from-zinc-500 via-zinc-400 to-zinc-700 shadow-2xl transition-shadow duration-300 hover:shadow-emerald-500/15 cursor-default md:cursor-grab md:active:cursor-grabbing"
           >
             {/* Card Body */}
             <div className="relative w-full rounded-2xl bg-[#18181b]/95 text-zinc-100 border border-zinc-800 p-5 backdrop-blur-xl overflow-hidden shadow-inner">
               {/* Glossy / Holographic Sheen Layer */}
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-emerald-500/5 to-cyan-500/10 pointer-events-none" />
 
-              {/* Top Badge Slot Hole */}
-              <div className="w-12 h-2.5 mx-auto bg-zinc-950 rounded-full border border-zinc-700/80 shadow-inner mb-3" />
+              {/* Top Badge Slot Hole (desktop only when lanyard is attached) */}
+              <div className="hidden md:block lanyard-hardware w-12 h-2.5 mx-auto bg-zinc-950 rounded-full border border-zinc-700/80 shadow-inner mb-3" />
 
               {/* Card Header: Bulacan State University Brand & Logo */}
               <div className="flex items-center justify-between pb-3 border-b border-zinc-800">

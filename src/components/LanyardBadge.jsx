@@ -364,16 +364,27 @@ export default function LanyardBadge() {
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' ? window.innerWidth >= 1024 : true
   );
+  const [isMobileScreen, setIsMobileScreen] = useState(
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  );
 
   // Responsive anchor: Centered on desktop left column (-2.65), centered on mobile (0)
   const anchorX = isDesktop ? -2.65 : 0;
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaMobile = window.matchMedia('(max-width: 768px)');
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024);
+      setIsMobileScreen(mediaMobile.matches);
     };
+    handleResize();
+    mediaMobile.addEventListener('change', handleResize);
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      mediaMobile.removeEventListener('change', handleResize);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Load high-resolution textures
@@ -429,10 +440,14 @@ export default function LanyardBadge() {
     if (dragging) setIsNearCard(true);
   }, []);
 
+  if (isMobileScreen) {
+    return null;
+  }
+
   return (
     <div
       ref={canvasContainerRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
+      className="hidden md:block lanyard-canvas-container absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
     >
       {texturesReady ? (
         <div

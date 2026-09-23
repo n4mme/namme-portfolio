@@ -61,3 +61,18 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+/* Mobile responsive rules: completely disable/hide ID lace & lanyard graphics on screens <= 768px */
+@media (max-width: 768px) {
+  .lanyard-lace,
+  .lanyard-graphic,
+  .lanyard-hardware,
+  .lanyard-canvas-container {
+    display: none !important;
+  }
+
+  .badge-mobile-static {
+    transform: none !important;
+  }
+}
+

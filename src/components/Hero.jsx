@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Download, Sparkles, RefreshCw, Github, Linkedin } from 'lucide-react';
 import LanyardBadge from './LanyardBadge';
+import SwingingBadge from './SwingingBadge';
 import { personalInfo, typewriterPhrases } from '../data/portfolioData';
 
 // Character sets for exact anagram rearrangement
@@ -91,14 +92,25 @@ const Hero = ({ onOpenCV }) => {
       <LanyardBadge />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 pointer-events-none">
-        {/* Two-Column Responsive Desktop Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[560px]">
+        {/* Two-Column Responsive Desktop Layout / Single-Column Mobile Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center min-h-[560px]">
           
-          {/* Left Column Spacer: Reserves exact physical layout space for the badge */}
-          <div className="lg:col-span-5 h-[440px] lg:h-full pointer-events-none order-2 lg:order-1" />
+          {/* Left / Top Column:
+              - Mobile (<= 768px): Sits cleanly at the top of the container (order-1), centered, static, no lace/lanyard graphics, retaining border styling around the image.
+              - Desktop (> 768px): Reserves exact physical layout space for the 3D interactive hanging badge.
+          */}
+          <div className="lg:col-span-5 flex justify-center items-center order-1 pointer-events-auto">
+            {/* Mobile / Small Screens: Static profile/badge image cleanly positioned at the top */}
+            <div className="block md:hidden w-full flex justify-center pb-2">
+              <SwingingBadge />
+            </div>
 
-          {/* Right Column: Typography & Actions */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2 pointer-events-auto relative z-30">
+            {/* Desktop / Larger Screens: Layout spacer reserving physical space for 3D LanyardBadge */}
+            <div className="hidden md:block h-[440px] lg:h-full w-full pointer-events-none" />
+          </div>
+
+          {/* Right Column: Typography & Actions (order-2 on mobile, order-2 on desktop) */}
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left order-2 pointer-events-auto relative z-30">
             
             {/* Top Subtitle / Student Identity Pill */}
             <motion.div
