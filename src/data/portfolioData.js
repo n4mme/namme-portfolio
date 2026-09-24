@@ -78,6 +78,21 @@ export const projectList = [
     featured: true,
     stats: "Figma UI/UX • Interactive Mobile Prototype",
     role: "UI/UX Designer • School Project"
+  },
+  {
+    id: 5,
+    title: "BulSU E-Handbook - Bustos Campus",
+    category: "Mobile",
+    description: "A proposed Android e-handbook for Bulacan State University — Bustos Campus, designed to give students quick access to campus policies, schedules, services, downloadable forms, and essential university resources.",
+    tags: ["Android Studio", "Java", "Mobile Development", "APK", "Android"],
+    demoUrl: "https://e-handbook-website.vercel.app/",
+    demoLabel: "Download APK",
+    githubUrl: null,
+    image: "/bulsu-ehandbook.png",
+    imagePosition: "object-cover object-center",
+    featured: true,
+    stats: "Android Application • 100% Offline Access",
+    role: "Mobile App Developer • Android Studio"
   }
 ];
 

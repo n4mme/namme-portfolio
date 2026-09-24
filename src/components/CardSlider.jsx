@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Github, Sparkles, CheckCircle2, Download } from 'lucide-react';
 
 /**
  * Sample mock items for standalone modular usage
@@ -64,6 +64,21 @@ export const sampleMockItems = [
     featured: true,
     stats: "Figma UI/UX • Interactive Mobile Prototype",
     role: "UI/UX Designer • School Project"
+  },
+  {
+    id: 5,
+    title: "BulSU E-Handbook - Bustos Campus",
+    category: "Mobile",
+    description: "A proposed Android e-handbook for Bulacan State University — Bustos Campus, designed to give students quick access to campus policies, schedules, services, downloadable forms, and essential university resources.",
+    tags: ["Android Studio", "Java", "Mobile Development", "APK", "Android"],
+    demoUrl: "https://e-handbook-website.vercel.app/",
+    demoLabel: "Download APK",
+    githubUrl: null,
+    image: "/bulsu-ehandbook.png",
+    imagePosition: "object-cover object-center",
+    featured: true,
+    stats: "Android Application • 100% Offline Access",
+    role: "Mobile App Developer • Android Studio"
   }
 ];
 
@@ -220,7 +235,11 @@ const CardSlider = ({ items = sampleMockItems }) => {
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-zinc-900/85 hover:bg-emerald-600 backdrop-blur-md border border-white/15 hover:border-emerald-500/50 shadow-md hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] active:scale-95 transition-all cursor-pointer group/btn"
                             >
                               <span>{project.demoLabel || "Live Preview"}</span>
-                              <ExternalLink size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                              {project.demoLabel?.toLowerCase().includes('download') ? (
+                                <Download size={13} className="group-hover/btn:translate-y-0.5 transition-transform" />
+                              ) : (
+                                <ExternalLink size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                              )}
                             </a>
                           )}
                         </div>
@@ -330,7 +349,11 @@ const CardSlider = ({ items = sampleMockItems }) => {
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-zinc-900/85 hover:bg-emerald-600 backdrop-blur-md border border-white/15 hover:border-emerald-500/50 shadow-md hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] active:scale-95 transition-all cursor-pointer group/btn"
                           >
                             <span>{project.demoLabel || "Live Preview"}</span>
-                            <ExternalLink size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                            {project.demoLabel?.toLowerCase().includes('download') ? (
+                              <Download size={13} className="group-hover/btn:translate-y-0.5 transition-transform" />
+                            ) : (
+                              <ExternalLink size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                            )}
                           </a>
                         )}
                       </div>
