@@ -80,24 +80,24 @@ const Navbar = ({ isDark, toggleTheme }) => {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 backdrop-blur-md border-b ${
         isScrolled
-          ? 'bg-white/80 dark:bg-zinc-900/85 border-zinc-200/80 dark:border-zinc-800 shadow-sm'
-          : 'bg-white/60 dark:bg-zinc-900/70 border-zinc-200/50 dark:border-zinc-800/60'
+          ? 'bg-white/85 dark:bg-zinc-900/90 border-zinc-200/80 dark:border-zinc-800 shadow-sm'
+          : 'bg-white/70 dark:bg-zinc-900/75 border-zinc-200/50 dark:border-zinc-800/60'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 md:h-24 flex items-center justify-between">
         {/* Left: Brand Name */}
         <a
           href="#home"
           onClick={(e) => scrollToSection(e, '#home')}
           className="flex items-center group cursor-pointer"
         >
-          <span className="font-extrabold text-2xl tracking-wider text-zinc-900 dark:text-white font-mono group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+          <span className="font-extrabold text-2xl sm:text-3xl tracking-widest text-zinc-900 dark:text-white font-mono group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
             NAMME
           </span>
         </a>
 
         {/* Center: Desktop Navigation Links in EXACT specified order */}
-        <nav className="hidden md:flex items-center gap-1 bg-zinc-100/80 dark:bg-zinc-800/60 p-1.5 rounded-full border border-zinc-200/70 dark:border-zinc-700/60">
+        <nav className="hidden md:flex items-center gap-1.5 bg-zinc-100/80 dark:bg-zinc-800/60 p-2 rounded-full border border-zinc-200/70 dark:border-zinc-700/60 shadow-inner">
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.substring(1);
             return (
@@ -105,7 +105,7 @@ const Navbar = ({ isDark, toggleTheme }) => {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => scrollToSection(e, link.href)}
-                className={`relative px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
+                className={`relative px-4 lg:px-5 py-2 text-sm lg:text-base font-semibold rounded-full transition-all duration-200 ${
                   isActive
                     ? 'text-white'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
@@ -126,14 +126,14 @@ const Navbar = ({ isDark, toggleTheme }) => {
         </nav>
 
         {/* Right Actions: Distinct "Hire Me" CTA + Theme Toggle */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3.5">
           {/* Hire Me CTA Button */}
           <a
             href="#contact"
             onClick={(e) => scrollToSection(e, '#contact')}
-            className="relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
+            className="relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
           >
-            <Sparkles size={14} className="animate-pulse" />
+            <Sparkles size={16} className="animate-pulse" />
             <span>Hire Me</span>
           </a>
 
@@ -141,34 +141,34 @@ const Navbar = ({ isDark, toggleTheme }) => {
           <button
             onClick={toggleTheme}
             aria-label="Toggle Night/Light theme"
-            className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-colors focus:outline-none cursor-pointer"
+            className="p-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-colors focus:outline-none cursor-pointer"
           >
             {isDark ? (
-              <Sun size={18} className="text-amber-400 animate-[spin_10s_linear_infinite]" />
+              <Sun size={20} className="text-amber-400 animate-[spin_10s_linear_infinite]" />
             ) : (
-              <Moon size={18} className="text-zinc-700" />
+              <Moon size={20} className="text-zinc-700" />
             )}
           </button>
         </div>
 
         {/* Mobile Controls (< md) */}
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex md:hidden items-center gap-2.5">
           {/* Theme Toggle on mobile */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle Night/Light theme"
-            className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700"
+            className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700"
           >
-            {isDark ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} />}
+            {isDark ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />}
           </button>
 
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Open menu"
-            className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700"
+            className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
@@ -191,14 +191,14 @@ const Navbar = ({ isDark, toggleTheme }) => {
                     key={link.name}
                     href={link.href}
                     onClick={(e) => scrollToSection(e, link.href)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors ${
+                    className={`px-5 py-3 rounded-xl text-base font-semibold flex items-center justify-between transition-colors ${
                       isActive
                         ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold'
                         : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/60'
                     }`}
                   >
                     <span>{link.name}</span>
-                    {isActive && <span className="w-2 h-2 rounded-full bg-emerald-500"></span>}
+                    {isActive && <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>}
                   </a>
                 );
               })}
@@ -209,11 +209,11 @@ const Navbar = ({ isDark, toggleTheme }) => {
               <a
                 href="#contact"
                 onClick={(e) => scrollToSection(e, '#contact')}
-                className="w-full py-3 px-4 rounded-xl text-center text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20"
+                className="w-full py-3.5 px-5 rounded-xl text-center text-base font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20"
               >
-                <Sparkles size={16} />
+                <Sparkles size={18} />
                 <span>Hire Me</span>
-                <ArrowUpRight size={16} />
+                <ArrowUpRight size={18} />
               </a>
             </div>
           </motion.div>

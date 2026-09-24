@@ -69,7 +69,7 @@ const SectionWrapper = ({
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={sectionVariants}
-      className={`scroll-mt-20 relative py-20 border-t border-zinc-200 dark:border-zinc-800/80 ${className}`}
+      className={`scroll-mt-24 relative py-20 border-t border-zinc-200 dark:border-zinc-800/80 ${className}`}
       {...props}
     >
       {children}
