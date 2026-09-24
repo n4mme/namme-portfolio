@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Send, Github, Linkedin, MapPin, CheckCircle2, MessageSquare, Clock, ExternalLink } from 'lucide-react';
+import { Mail, Send, Github, Linkedin, MapPin, CheckCircle2, MessageSquare, Clock, ExternalLink, AlertCircle, MailCheck, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import SectionWrapper, { staggerContainer, fadeInUp } from './SectionWrapper';
 import { personalInfo } from '../data/portfolioData';
@@ -14,37 +14,67 @@ const Contact = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState('idle'); // 'idle' | 'success' | 'activation' | 'error'
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage('');
 
-    // Simulate sending contact email
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${personalInfo.email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          _replyto: formData.email.trim(),
+          subject: formData.subject.trim() || `Portfolio Inquiry from ${formData.name.trim()}`,
+          message: formData.message.trim(),
+          _subject: `[Portfolio Contact] ${formData.subject.trim() || 'New Inquiry'} from ${formData.name.trim()}`,
+          _template: 'table',
+          _captcha: 'false',
+        }),
+      });
 
-      // Trigger festive celebration confetti
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.7 },
-          colors: ['#10b981', '#14b8a6', '#06b6d4', '#6366f1'],
-        });
-      } catch (err) {
-        // graceful fallback if canvas not supported
+      const data = await response.json();
+
+      if (response.ok && (data.success === 'true' || data.success === true)) {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+
+        try {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.7 },
+            colors: ['#10b981', '#14b8a6', '#06b6d4', '#6366f1'],
+          });
+        } catch (err) {
+          // graceful fallback if canvas not supported
+        }
+      } else if (data.message && data.message.toLowerCase().includes('activation')) {
+        setStatus('activation');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        throw new Error(data.message || 'Failed to deliver message. Please try again.');
       }
-
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setSubmitted(false), 6000);
-    }, 1000);
+    } catch (err) {
+      console.error('Contact submission error:', err);
+      setStatus('error');
+      setErrorMessage(err.message || 'Unable to connect to the mail service right now.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -177,24 +207,82 @@ const Contact = () => {
                 <span>Send a Direct Message</span>
               </h3>
 
-              {submitted ? (
+              {status === 'success' ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="p-8 text-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30"
                 >
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto mb-3 shadow-md">
-                    <CheckCircle2 size={24} />
+                  <div className="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/25">
+                    <CheckCircle2 size={28} />
                   </div>
-                  <h4 className="text-lg font-bold text-emerald-800 dark:text-emerald-300">
+                  <h4 className="text-xl font-bold text-emerald-800 dark:text-emerald-300">
                     Message Sent Successfully!
                   </h4>
-                  <p className="text-xs sm:text-sm text-emerald-700 dark:text-emerald-400 mt-1">
-                    Thank you for reaching out, Emmanuel Nantes will review your note and respond shortly.
+                  <p className="text-sm text-emerald-700 dark:text-emerald-400 mt-2 max-w-md mx-auto leading-relaxed">
+                    Thank you for reaching out! Your message was delivered directly to Emmanuel's Gmail inbox. He will review your note and respond shortly.
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-600/20 active:scale-[0.98] transition-all cursor-pointer"
+                  >
+                    <RotateCcw size={14} />
+                    <span>Send Another Message</span>
+                  </button>
+                </motion.div>
+              ) : status === 'activation' ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-8 text-center rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-500/30"
+                >
+                  <div className="w-14 h-14 rounded-full bg-amber-500 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/25">
+                    <MailCheck size={28} />
+                  </div>
+                  <h4 className="text-xl font-bold text-amber-900 dark:text-amber-200">
+                    One-Time Activation Needed
+                  </h4>
+                  <p className="text-sm text-amber-800 dark:text-amber-300 mt-2 max-w-md mx-auto leading-relaxed">
+                    FormSubmit has sent a one-time verification email to <span className="font-semibold underline text-amber-900 dark:text-amber-100">{personalInfo.email}</span>.
+                  </p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-2 max-w-md mx-auto">
+                    Please open your Gmail and click <strong>Activate Form</strong>. After clicking it once, all future submissions will arrive directly in your inbox.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-amber-600 hover:bg-amber-500 shadow-md shadow-amber-600/20 active:scale-[0.98] transition-all cursor-pointer"
+                  >
+                    <RotateCcw size={14} />
+                    <span>Return to Form</span>
+                  </button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {status === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs sm:text-sm text-rose-700 dark:text-rose-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <AlertCircle size={18} className="shrink-0 text-rose-500" />
+                        <span className="truncate">{errorMessage || 'Could not send message automatically.'}</span>
+                      </div>
+                      <a
+                        href={`mailto:${personalInfo.email}?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`Hi Emmanuel,\n\n${formData.message}\n\nFrom: ${formData.name} (${formData.email})`)}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs shadow-sm transition-colors whitespace-nowrap shrink-0"
+                      >
+                        <Mail size={14} />
+                        <span>Send via Email Client</span>
+                      </a>
+                    </motion.div>
+                  )}
+
+                  {/* Honeypot spam field (invisible to real users) */}
+                  <input type="text" name="_honey" className="hidden" tabIndex="-1" autoComplete="off" />
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Name */}
                     <div>
@@ -205,10 +293,11 @@ const Contact = () => {
                         type="text"
                         name="name"
                         required
+                        disabled={isSubmitting}
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="e.g. Maria Santos"
-                        className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                        className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all disabled:opacity-60"
                       />
                     </div>
 
@@ -221,10 +310,11 @@ const Contact = () => {
                         type="email"
                         name="email"
                         required
+                        disabled={isSubmitting}
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="maria@example.com"
-                        className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                        className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -237,10 +327,11 @@ const Contact = () => {
                     <input
                       type="text"
                       name="subject"
+                      disabled={isSubmitting}
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="Internship Inquiry / Project Discussion"
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all disabled:opacity-60"
                     />
                   </div>
 
@@ -253,10 +344,11 @@ const Contact = () => {
                       name="message"
                       rows={5}
                       required
+                      disabled={isSubmitting}
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Share project goals, timeline, or open role requirements..."
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all resize-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all resize-none disabled:opacity-60"
                     />
                   </div>
 
@@ -264,10 +356,13 @@ const Contact = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3.5 px-6 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                    className="w-full py-3.5 px-6 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-md shadow-emerald-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Sending Message...</span>
+                      </>
                     ) : (
                       <>
                         <Send size={16} />
