@@ -83,22 +83,20 @@ export const sampleMockItems = [
 ];
 
 /**
- * Responsive 3-Item Card Carousel with infinite wrap-around slide logic
+ * Responsive 2-Item Card Carousel with infinite wrap-around slide logic
  */
 const CardSlider = ({ items = sampleMockItems }) => {
-  const [visibleCount, setVisibleCount] = useState(3);
+  const [visibleCount, setVisibleCount] = useState(2);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
-  // Measure and adapt visible cards to viewport size
+  // Measure and adapt visible cards to viewport size (1 on mobile, 2 on desktop/tablet)
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
+      if (window.innerWidth < 768) {
         setVisibleCount(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleCount(2);
       } else {
-        setVisibleCount(3);
+        setVisibleCount(2);
       }
     };
 
@@ -153,7 +151,7 @@ const CardSlider = ({ items = sampleMockItems }) => {
   };
 
   return (
-    <div className="relative w-full py-4">
+    <div className="relative w-full max-w-6xl mx-auto py-4">
       {/* Navigation Arrows: Frosted Glass Effect */}
       {shouldSlide && (
         <>
@@ -203,7 +201,7 @@ const CardSlider = ({ items = sampleMockItems }) => {
                 >
                   {/* Card Image Cover */}
                   {project.image && (
-                    <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
+                    <div className="relative w-full h-56 sm:h-64 md:h-72 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
                       <img
                         src={project.image}
                         alt={project.title}
@@ -317,7 +315,7 @@ const CardSlider = ({ items = sampleMockItems }) => {
               >
                 {/* Card Image Cover */}
                 {project.image && (
-                  <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
+                  <div className="relative w-full h-56 sm:h-64 md:h-72 overflow-hidden bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 group/img">
                     <img
                       src={project.image}
                       alt={project.title}
