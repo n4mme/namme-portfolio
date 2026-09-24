@@ -158,7 +158,7 @@ const CardSlider = ({ items = sampleMockItems }) => {
           <button
             onClick={handlePrev}
             aria-label="Previous Project"
-            className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full backdrop-blur-md bg-zinc-900/80 hover:bg-zinc-800/95 border border-zinc-700/80 hover:border-emerald-500/60 text-zinc-200 hover:text-white shadow-xl hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center cursor-pointer active:scale-90"
+            className="absolute -left-4 sm:-left-7 md:-left-10 lg:-left-14 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full backdrop-blur-md bg-zinc-900/80 hover:bg-zinc-800/95 border border-zinc-700/80 hover:border-emerald-500/60 text-zinc-200 hover:text-white shadow-xl hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center cursor-pointer active:scale-90"
           >
             <ChevronLeft size={22} />
           </button>
@@ -166,7 +166,7 @@ const CardSlider = ({ items = sampleMockItems }) => {
           <button
             onClick={handleNext}
             aria-label="Next Project"
-            className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full backdrop-blur-md bg-zinc-900/80 hover:bg-zinc-800/95 border border-zinc-700/80 hover:border-emerald-500/60 text-zinc-200 hover:text-white shadow-xl hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center cursor-pointer active:scale-90"
+            className="absolute -right-4 sm:-right-7 md:-right-10 lg:-right-14 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full backdrop-blur-md bg-zinc-900/80 hover:bg-zinc-800/95 border border-zinc-700/80 hover:border-emerald-500/60 text-zinc-200 hover:text-white shadow-xl hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center cursor-pointer active:scale-90"
           >
             <ChevronRight size={22} />
           </button>
@@ -258,28 +258,30 @@ const CardSlider = ({ items = sampleMockItems }) => {
                       )}
                     </div>
 
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-1">
+                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                       {project.title}
                     </h3>
 
-                    <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-3">
+                    <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       {project.description}
                     </p>
 
-                    <div className="mt-4 flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
-                      <CheckCircle2 size={14} className="shrink-0" />
-                      <span className="truncate">{project.stats}</span>
-                    </div>
+                    <div className="mt-auto pt-4">
+                      <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 size={14} className="shrink-0" />
+                        <span className="truncate">{project.stats}</span>
+                      </div>
 
-                    <div className="mt-5 flex flex-wrap gap-1.5 pt-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs font-mono px-2.5 py-1 rounded-md bg-emerald-500/5 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs font-mono px-2.5 py-1 rounded-md bg-emerald-500/5 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -380,20 +382,22 @@ const CardSlider = ({ items = sampleMockItems }) => {
                     {project.description}
                   </p>
 
-                  <div className="mt-4 flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle2 size={14} className="shrink-0" />
-                    <span>{project.stats}</span>
-                  </div>
+                  <div className="mt-auto pt-4">
+                    <div className="flex items-center gap-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                      <CheckCircle2 size={14} className="shrink-0" />
+                      <span>{project.stats}</span>
+                    </div>
 
-                  <div className="mt-6 flex flex-wrap gap-1.5">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs font-mono px-2.5 py-1 rounded-md bg-emerald-500/5 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs font-mono px-2.5 py-1 rounded-md bg-emerald-500/5 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
